@@ -129,37 +129,23 @@ export default function IntakeForm() {
     setIsSubmitting(true);
 
     try {
-      // Create client in Airtable
-      const clientId = await AirtableService.createClient({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        address: formData.address
+      const response = await fetch('/api/submit-intake', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
       });
 
-      // Create items in Airtable
-      const itemIds: string[] = [];
-      for (const item of formData.items) {
-        // TODO: Upload photos to cloud storage first
-        const photoUrls: string[] = []; // Placeholder for photo URLs
-        
-        const itemId = await AirtableService.createItem({
-          title: item.title,
-          description: item.description,
-          estimatedValue: item.estimatedValue,
-          category: item.category,
-          isSpecialty: item.isSpecialty,
-          photos: photoUrls,
-          status: 'pending',
-          consignedDate: new Date()
-        }, clientId);
-        
-        itemIds.push(itemId);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Submission failed');
       }
 
-      // TODO: Generate and create contract
-      alert('Consignment application submitted successfully! You will receive a confirmation email shortly.');
+      const result = await response.json();
+      
+      // Show success message
+      alert('Consignment application submitted successfully! You will receive an email confirmation shortly.');
       
       // Reset form
       setCurrentStep(1);
@@ -183,10 +169,10 @@ export default function IntakeForm() {
           photos: []
         }]
       });
-
+      
     } catch (error) {
       console.error('Submission error:', error);
-      alert('There was an error submitting your application. Please try again.');
+      alert(`There was an error submitting your application: ${error instanceof Error ? error.message : 'Please try again.'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -299,12 +285,12 @@ export default function IntakeForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Zip Code</label>
+                  <label className="block text-sm font-medium text-black mb-2">Zip Code</label>
                   <input
                     type="text"
                     value={formData.address.zipCode}
                     onChange={(e) => updateFormData('address.zipCode', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-400 rounded-md bg-white text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
                 </div>

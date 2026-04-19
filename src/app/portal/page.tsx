@@ -58,7 +58,7 @@ export default function PortalPage() {
               <p className="text-sm text-gray-600 text-center">
                 Don't have your Client ID? 
                 <br />
-                <a href="mailto:support@kpcvault.com" className="text-blue-600 hover:text-blue-800">
+                <a href="mailto:Support@KPCVault.org" className="text-blue-600 hover:text-blue-800">
                   Contact Support
                 </a>
               </p>

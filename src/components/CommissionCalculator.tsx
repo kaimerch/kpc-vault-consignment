@@ -95,6 +95,19 @@ export default function CommissionCalculator({
           </div>
         </div>
 
+        {/* Specialty Items Clarification */}
+        <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200">
+          <h3 className="text-sm font-semibold text-gray-800 mb-2">Specialty Consignment Items:</h3>
+          <div className="text-xs text-gray-700 space-y-1">
+            <p><strong>Luxury & Designer Goods:</strong> High-end handbags (e.g., Hermes, Chanel), watches, jewelry, and authentic designer apparel.</p>
+            <p><strong>Art & Antiques:</strong> Original artwork, sculptures, antique furniture, rare collectibles, and fine art.</p>
+            <p><strong>Unique Home Décor & Furnishings:</strong> Mid-century modern furniture, high-quality wooden furniture, hand-knotted rugs, and unique lighting (chandeliers, sconces).</p>
+            <p><strong>Collectibles:</strong> Rare items, vintage fashion from specific eras (e.g., 1940s), marked costume jewelry (e.g., Sherman), and memorabilia.</p>
+            <p><strong>Specialty Equipment:</strong> Musical instruments, high-end photographic equipment, specialized sporting goods (e.g., surfboards, ski gear), and boutique, high-value electronics.</p>
+            <p><strong>Vehicles & Transportation:</strong> Motor vehicles, motorcycles, and recreational vehicles (RVs) are often consigned due to the need for secure, professional sales handling.</p>
+          </div>
+        </div>
+
         {/* Results */}
         {estimatedValue > 0 && (
           <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
