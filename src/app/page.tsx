@@ -96,7 +96,7 @@ export default function Home() {
             </p>
           </div>
           
-          <CommissionCalculator onCalculationChange={(calc) => console.log('Commission calculated:', calc)} />
+          <CommissionCalculator />
         </div>
       </section>
 

@@ -10,8 +10,19 @@ if (!AIRTABLE_BASE_ID || !AIRTABLE_API_KEY) {
   console.warn('Airtable configuration missing. Please set NEXT_PUBLIC_AIRTABLE_BASE_ID and AIRTABLE_API_KEY environment variables.');
 }
 
-// Initialize Airtable
-const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
+// Initialize Airtable (with fallback for build time)
+let base: any;
+if (AIRTABLE_BASE_ID && AIRTABLE_API_KEY) {
+  base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
+} else {
+  // Fallback for build time when env vars are not available
+  base = {
+    'Clients': { create: () => Promise.reject('Airtable not configured'), find: () => Promise.reject('Airtable not configured'), select: () => ({ all: () => Promise.reject('Airtable not configured') }) },
+    'Items': { create: () => Promise.reject('Airtable not configured'), select: () => ({ all: () => Promise.reject('Airtable not configured') }) },
+    'Contracts': { create: () => Promise.reject('Airtable not configured') },
+    'Sales': { create: () => Promise.reject('Airtable not configured'), select: () => ({ all: () => Promise.reject('Airtable not configured') }) }
+  };
+}
 
 // Table names
 export const TABLES = {
@@ -72,7 +83,7 @@ export class AirtableService {
   }
 
   // Item operations
-  static async createItem(itemData: Omit<Item, 'id'>): Promise<string> {
+  static async createItem(itemData: Omit<Item, 'id'>, clientId: string): Promise<string> {
     try {
       const record = await base(TABLES.ITEMS).create({
         'Title': itemData.title,
@@ -80,12 +91,13 @@ export class AirtableService {
         'Estimated Value': itemData.estimatedValue,
         'Category': itemData.category,
         'Is Specialty': itemData.isSpecialty,
-        'Photos': itemData.photos.map(photo => ({ url: photo })),
+        'Photos': itemData.photos.length > 0 ? itemData.photos.join(', ') : '',
         'Status': itemData.status,
         'Consigned Date': itemData.consignedDate.toISOString(),
         'Sold Date': itemData.soldDate?.toISOString(),
         'Sold Price': itemData.soldPrice,
-        'Commission': itemData.commission
+        'Commission': itemData.commission,
+        'Client': [clientId]
       });
       
       return record.id;
@@ -104,14 +116,14 @@ export class AirtableService {
         })
         .all();
 
-      return records.map(record => ({
+      return records.map((record: any) => ({
         id: record.id,
         title: record.fields['Title'] as string,
         description: record.fields['Description'] as string,
         estimatedValue: record.fields['Estimated Value'] as number,
         category: record.fields['Category'] as string,
         isSpecialty: record.fields['Is Specialty'] as boolean || false,
-        photos: (record.fields['Photos'] as any[] || []).map(photo => photo.url),
+        photos: record.fields['Photos'] ? (record.fields['Photos'] as string).split(', ').filter(url => url.trim()) : [],
         status: record.fields['Status'] as Item['status'],
         consignedDate: new Date(record.fields['Consigned Date'] as string),
         soldDate: record.fields['Sold Date'] ? new Date(record.fields['Sold Date'] as string) : undefined,
@@ -173,7 +185,7 @@ export class AirtableService {
         })
         .all();
 
-      return records.map(record => ({
+      return records.map((record: any) => ({
         id: record.id,
         itemId: (record.fields['Item'] as string[])[0],
         clientId: (record.fields['Client'] as string[])[0],

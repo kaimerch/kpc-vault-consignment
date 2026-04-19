@@ -153,7 +153,7 @@ export default function IntakeForm() {
           photos: photoUrls,
           status: 'pending',
           consignedDate: new Date()
-        });
+        }, clientId);
         
         itemIds.push(itemId);
       }

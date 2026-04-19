@@ -214,9 +214,7 @@ export class ContractGenerator {
 
   static async generateAndSave(contractData: ContractData): Promise<Blob> {
     const pdf = this.generateContract(contractData);
-    return new Promise((resolve) => {
-      pdf.output('blob', resolve as any);
-    });
+    return pdf.output('blob') as Blob;
   }
 
   static previewContract(contractData: ContractData): void {
