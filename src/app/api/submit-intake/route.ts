@@ -9,11 +9,18 @@ const createAirtableRecord = async (tableName: string, fields: any) => {
   if (!AIRTABLE_BASE_ID || !AIRTABLE_API_KEY) {
     throw new Error('Airtable configuration missing');
   }
+  
+  // Clean the API key of any whitespace/newlines
+  const cleanApiKey = AIRTABLE_API_KEY.trim().replace(/\s+/g, '');
+  
+  if (!cleanApiKey.startsWith('pat')) {
+    throw new Error('Invalid API key format - should start with "pat"');
+  }
 
   const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${tableName}`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+      'Authorization': `Bearer ${cleanApiKey}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ fields })
