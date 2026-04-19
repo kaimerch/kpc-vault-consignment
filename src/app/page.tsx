@@ -57,7 +57,7 @@ export default function Home() {
               <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="text-blue-600" size={32} />
               </div>
-              <h4 className="text-xl font-semibold mb-2">Dynamic Pricing</h4>
+              <h4 className="text-xl font-semibold mb-2 text-black">Dynamic Pricing</h4>
               <p className="text-black">
                 Competitive commission rates based on item value: 25% for high-value items, up to 40% for smaller pieces
               </p>
@@ -67,7 +67,7 @@ export default function Home() {
               <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <FileText className="text-green-600" size={32} />
               </div>
-              <h4 className="text-xl font-semibold mb-2">Digital Contracts</h4>
+              <h4 className="text-xl font-semibold mb-2 text-black">Digital Contracts</h4>
               <p className="text-black">
                 Automated contract generation with electronic signatures and PDF delivery
               </p>
@@ -77,7 +77,7 @@ export default function Home() {
               <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Users className="text-purple-600" size={32} />
               </div>
-              <h4 className="text-xl font-semibold mb-2">Client Portal</h4>
+              <h4 className="text-xl font-semibold mb-2 text-black">Client Portal</h4>
               <p className="text-black">
                 Real-time tracking of your items, sales status, and payment history
               </p>
