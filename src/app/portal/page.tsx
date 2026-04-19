@@ -25,16 +25,16 @@ export default function PortalPage() {
                 <User className="text-blue-600" size={32} />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">Client Portal</h1>
-              <p className="text-gray-600">Access your consignment account</p>
+              <p className="text-black">Access your consignment account</p>
             </div>
 
             <form onSubmit={handleLogin}>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-black mb-2">
                   Client ID
                 </label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-900" size={20} />
                   <input
                     type="text"
                     value={clientId}
@@ -55,7 +55,7 @@ export default function PortalPage() {
             </form>
 
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600 text-center">
+              <p className="text-sm text-black text-center">
                 Don't have your Client ID? 
                 <br />
                 <a href="mailto:Support@KPCVault.org" className="text-blue-600 hover:text-blue-800">
@@ -66,7 +66,7 @@ export default function PortalPage() {
 
             {/* Demo section for testing */}
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-              <p className="text-xs text-yellow-800">
+              <p className="text-xs text-black">
                 <strong>Demo:</strong> Use any client ID from Airtable or "demo-client-123" for testing
               </p>
             </div>

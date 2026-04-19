@@ -37,18 +37,18 @@ export default function CommissionCalculator({
     <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
       <div className="flex items-center gap-2 mb-6">
         <Calculator className="text-blue-600" size={24} />
-        <h2 className="text-xl font-semibold text-gray-800">Commission Calculator</h2>
+        <h2 className="text-xl font-semibold text-black">Commission Calculator</h2>
       </div>
 
       <div className="space-y-4">
         {/* Input Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="estimatedValue" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="estimatedValue" className="block text-sm font-medium text-black mb-2">
               Estimated Item Value
             </label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-900" size={20} />
               <input
                 type="number"
                 id="estimatedValue"
@@ -70,14 +70,14 @@ export default function CommissionCalculator({
                 onChange={(e) => setIsSpecialty(e.target.checked)}
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm font-medium text-gray-700">Specialty Item (35% commission)</span>
+              <span className="text-sm font-medium text-black">Specialty Item (35% commission)</span>
             </label>
           </div>
         </div>
 
         {/* Commission Rules Display */}
         <div className="bg-gray-50 p-4 rounded-md">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Commission Structure</h3>
+          <h3 className="text-sm font-medium text-black mb-3">Commission Structure</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
             {COMMISSION_RULES.map((rule) => (
               <div
@@ -85,7 +85,7 @@ export default function CommissionCalculator({
                 className={`px-3 py-2 rounded-md text-sm ${
                   rule.tier === calculation.tier 
                     ? getCommissionTierColor(rule.tier)
-                    : 'bg-gray-100 text-gray-600'
+                    : 'bg-gray-100 text-black'
                 }`}
               >
                 <div className="font-medium">{rule.percentage}%</div>
@@ -97,8 +97,8 @@ export default function CommissionCalculator({
 
         {/* Specialty Items Clarification */}
         <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200">
-          <h3 className="text-sm font-semibold text-gray-800 mb-2">Specialty Consignment Items:</h3>
-          <div className="text-xs text-gray-700 space-y-1">
+          <h3 className="text-sm font-semibold text-black mb-2">Specialty Consignment Items:</h3>
+          <div className="text-xs text-black space-y-1">
             <p><strong>Luxury & Designer Goods:</strong> High-end handbags (e.g., Hermes, Chanel), watches, jewelry, and authentic designer apparel.</p>
             <p><strong>Art & Antiques:</strong> Original artwork, sculptures, antique furniture, rare collectibles, and fine art.</p>
             <p><strong>Unique Home Décor & Furnishings:</strong> Mid-century modern furniture, high-quality wooden furniture, hand-knotted rugs, and unique lighting (chandeliers, sconces).</p>
@@ -118,26 +118,26 @@ export default function CommissionCalculator({
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-800">
+                <div className="text-2xl font-bold text-black">
                   {formatCurrency(calculation.commission)}
                 </div>
-                <div className="text-sm text-gray-600">KPC Vault Commission</div>
-                <div className="text-xs text-gray-500">({calculation.percentage}%)</div>
+                <div className="text-sm text-black">KPC Vault Commission</div>
+                <div className="text-xs text-gray-900">({calculation.percentage}%)</div>
               </div>
               
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
                   {formatCurrency(calculation.clientPayout)}
                 </div>
-                <div className="text-sm text-gray-600">Client Payout</div>
-                <div className="text-xs text-gray-500">({(100 - calculation.percentage).toFixed(0)}%)</div>
+                <div className="text-sm text-black">Client Payout</div>
+                <div className="text-xs text-gray-900">({(100 - calculation.percentage).toFixed(0)}%)</div>
               </div>
               
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">
                   {formatCurrency(estimatedValue)}
                 </div>
-                <div className="text-sm text-gray-600">Item Value</div>
+                <div className="text-sm text-black">Item Value</div>
                 <div className={`inline-block px-2 py-1 rounded-full text-xs ${getCommissionTierColor(calculation.tier)}`}>
                   {calculation.rule.description}
                 </div>

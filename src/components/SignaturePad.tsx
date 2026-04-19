@@ -145,14 +145,14 @@ export default function SignaturePad({
     <div className={`border border-gray-300 rounded-lg p-4 bg-white ${className}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Pen className="text-gray-600" size={20} />
-          <span className="text-sm font-medium text-gray-700">Digital Signature</span>
+          <Pen className="text-black" size={20} />
+          <span className="text-sm font-medium text-black">Digital Signature</span>
         </div>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={clearSignature}
-            className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1 px-3 py-1 text-sm text-black hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           >
             <RotateCcw size={14} />
             Clear
@@ -184,7 +184,7 @@ export default function SignaturePad({
         onTouchEnd={handleTouchEnd}
       />
 
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-xs text-black mt-2">
         Sign above using your mouse or touch screen
       </p>
     </div>

@@ -54,7 +54,7 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
       'pending': 'bg-yellow-100 text-yellow-800',
       'active': 'bg-blue-100 text-blue-800',
       'sold': 'bg-green-100 text-green-800',
-      'returned': 'bg-gray-100 text-gray-800'
+      'returned': 'bg-gray-100 text-black'
     };
     return colors[status];
   };
@@ -86,9 +86,9 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
   if (!client) {
     return (
       <div className="text-center py-16">
-        <Package className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+        <Package className="mx-auto h-16 w-16 text-gray-900 mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">Client Not Found</h3>
-        <p className="text-gray-600">Please check your client ID and try again.</p>
+        <p className="text-black">Please check your client ID and try again.</p>
       </div>
     );
   }
@@ -108,14 +108,14 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
               <h1 className="text-2xl font-bold text-gray-900">
                 Welcome, {client.firstName} {client.lastName}
               </h1>
-              <p className="text-gray-600">{client.email}</p>
+              <p className="text-black">{client.email}</p>
             </div>
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(stats.totalEarnings)}
             </div>
-            <div className="text-sm text-gray-600">Total Earnings</div>
+            <div className="text-sm text-black">Total Earnings</div>
           </div>
         </div>
       </div>
@@ -125,17 +125,17 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Items</p>
+              <p className="text-sm font-medium text-black">Total Items</p>
               <p className="text-2xl font-bold text-gray-900">{stats.totalItems}</p>
             </div>
-            <Package className="text-gray-400" size={24} />
+            <Package className="text-gray-900" size={24} />
           </div>
         </div>
 
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Active Items</p>
+              <p className="text-sm font-medium text-black">Active Items</p>
               <p className="text-2xl font-bold text-blue-600">{stats.activeItems}</p>
             </div>
             <TrendingUp className="text-blue-400" size={24} />
@@ -145,7 +145,7 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Sold Items</p>
+              <p className="text-sm font-medium text-black">Sold Items</p>
               <p className="text-2xl font-bold text-green-600">{stats.soldItems}</p>
             </div>
             <DollarSign className="text-green-400" size={24} />
@@ -155,7 +155,7 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Sales</p>
+              <p className="text-sm font-medium text-black">Total Sales</p>
               <p className="text-2xl font-bold text-purple-600">{formatCurrency(stats.totalSales)}</p>
             </div>
             <Calendar className="text-purple-400" size={24} />
@@ -178,7 +178,7 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
                 className={`flex items-center space-x-2 py-4 border-b-2 font-medium text-sm ${
                   activeTab === key
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-black hover:text-black hover:border-gray-300'
                 }`}
               >
                 <Icon size={16} />
@@ -195,7 +195,7 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">Your Consigned Items</h3>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-900" size={16} />
                   <input
                     type="text"
                     placeholder="Search items..."
@@ -217,8 +217,8 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
                             {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
+                        <p className="text-sm text-black mb-2">{item.description}</p>
+                        <div className="flex items-center space-x-4 text-sm text-black">
                           <span>Category: {item.category}</span>
                           <span>Estimated Value: {formatCurrency(item.estimatedValue)}</span>
                           <span>Consigned: {item.consignedDate.toLocaleDateString()}</span>
@@ -231,7 +231,7 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
                           </div>
                         )}
                         {item.photos.length > 0 && (
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-black mt-1">
                             {item.photos.length} photo(s)
                           </div>
                         )}
@@ -242,8 +242,8 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
 
                 {filteredItems.length === 0 && (
                   <div className="text-center py-8">
-                    <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <p className="text-gray-600">
+                    <Package className="mx-auto h-12 w-12 text-gray-900 mb-4" />
+                    <p className="text-black">
                       {searchTerm ? 'No items found matching your search.' : 'No items consigned yet.'}
                     </p>
                   </div>
@@ -265,11 +265,11 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
                       <div className="flex justify-between items-start">
                         <div>
                           <h4 className="font-medium text-gray-900">{item?.title || 'Unknown Item'}</h4>
-                          <p className="text-sm text-gray-600">Sold on {sale.saleDate.toLocaleDateString()}</p>
+                          <p className="text-sm text-black">Sold on {sale.saleDate.toLocaleDateString()}</p>
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-semibold">{formatCurrency(sale.salePrice)}</div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-black">
                             Commission: {formatCurrency(sale.commission)}
                           </div>
                           <div className="text-green-600 font-medium">
@@ -289,8 +289,8 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
 
                 {sales.length === 0 && (
                   <div className="text-center py-8">
-                    <DollarSign className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <p className="text-gray-600">No sales yet.</p>
+                    <DollarSign className="mx-auto h-12 w-12 text-gray-900 mb-4" />
+                    <p className="text-black">No sales yet.</p>
                   </div>
                 )}
               </div>
@@ -304,22 +304,22 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
               
               <div className="max-w-md space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <label className="block text-sm font-medium text-black mb-1">Name</label>
                   <p className="text-gray-900">{client.firstName} {client.lastName}</p>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-black mb-1">Email</label>
                   <p className="text-gray-900">{client.email}</p>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                  <label className="block text-sm font-medium text-black mb-1">Phone</label>
                   <p className="text-gray-900">{client.phone}</p>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                  <label className="block text-sm font-medium text-black mb-1">Address</label>
                   <p className="text-gray-900">
                     {client.address.street}<br />
                     {client.address.city}, {client.address.state} {client.address.zipCode}

@@ -187,7 +187,7 @@ export default function IntakeForm() {
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-2xl font-bold text-gray-900">Consignment Application</h2>
-            <span className="text-sm text-gray-500">Step {currentStep} of 3</span>
+            <span className="text-sm text-black">Step {currentStep} of 3</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
@@ -208,7 +208,7 @@ export default function IntakeForm() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                  <label className="block text-sm font-medium text-black mb-2">First Name</label>
                   <input
                     type="text"
                     value={formData.firstName}
@@ -219,7 +219,7 @@ export default function IntakeForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                  <label className="block text-sm font-medium text-black mb-2">Last Name</label>
                   <input
                     type="text"
                     value={formData.lastName}
@@ -230,7 +230,7 @@ export default function IntakeForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-black mb-2">Email</label>
                   <input
                     type="email"
                     value={formData.email}
@@ -241,7 +241,7 @@ export default function IntakeForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-black mb-2">Phone</label>
                   <input
                     type="tel"
                     value={formData.phone}
@@ -252,7 +252,7 @@ export default function IntakeForm() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+                  <label className="block text-sm font-medium text-black mb-2">Street Address</label>
                   <input
                     type="text"
                     value={formData.address.street}
@@ -263,7 +263,7 @@ export default function IntakeForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                  <label className="block text-sm font-medium text-black mb-2">City</label>
                   <input
                     type="text"
                     value={formData.address.city}
@@ -274,7 +274,7 @@ export default function IntakeForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                  <label className="block text-sm font-medium text-black mb-2">State</label>
                   <input
                     type="text"
                     value={formData.address.state}
@@ -290,7 +290,7 @@ export default function IntakeForm() {
                     type="text"
                     value={formData.address.zipCode}
                     onChange={(e) => updateFormData('address.zipCode', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-400 rounded-md bg-white text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-400 rounded-md bg-white text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
                 </div>
@@ -342,7 +342,7 @@ export default function IntakeForm() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Item Title</label>
+                      <label className="block text-sm font-medium text-black mb-2">Item Title</label>
                       <input
                         type="text"
                         value={item.title}
@@ -353,7 +353,7 @@ export default function IntakeForm() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <label className="block text-sm font-medium text-black mb-2">Category</label>
                       <select
                         value={item.category}
                         onChange={(e) => updateFormData(`items.${index}.category`, e.target.value)}
@@ -368,7 +368,7 @@ export default function IntakeForm() {
                     </div>
 
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                      <label className="block text-sm font-medium text-black mb-2">Description</label>
                       <textarea
                         value={item.description}
                         onChange={(e) => updateFormData(`items.${index}.description`, e.target.value)}
@@ -379,7 +379,7 @@ export default function IntakeForm() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Value</label>
+                      <label className="block text-sm font-medium text-black mb-2">Estimated Value</label>
                       <input
                         type="number"
                         value={item.estimatedValue || ''}
@@ -399,12 +399,12 @@ export default function IntakeForm() {
                           onChange={(e) => updateFormData(`items.${index}.isSpecialty`, e.target.checked)}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
-                        <span className="text-sm font-medium text-gray-700">Specialty Item (35% commission)</span>
+                        <span className="text-sm font-medium text-black">Specialty Item (35% commission)</span>
                       </label>
                     </div>
 
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Photos</label>
+                      <label className="block text-sm font-medium text-black mb-2">Photos</label>
                       <div className="flex items-center gap-4">
                         <label className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md px-4 py-2 cursor-pointer hover:bg-gray-100">
                           <Camera size={20} />
@@ -418,7 +418,7 @@ export default function IntakeForm() {
                           />
                         </label>
                         {item.photos.length > 0 && (
-                          <span className="text-sm text-gray-600">
+                          <span className="text-sm text-black">
                             {item.photos.length} photo(s) selected
                           </span>
                         )}
@@ -475,15 +475,15 @@ export default function IntakeForm() {
                 <h4 className="font-semibold text-blue-800 mb-2">Commission Summary</h4>
                 <div className="grid grid-cols-3 gap-4 text-sm">
                   <div>
-                    <div className="text-gray-600">Total Item Value</div>
+                    <div className="text-black">Total Item Value</div>
                     <div className="font-bold">${totals.totalValue.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-gray-600">Total Commission</div>
+                    <div className="text-black">Total Commission</div>
                     <div className="font-bold">${totals.totalCommission.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-gray-600">Your Total Payout</div>
+                    <div className="text-black">Your Total Payout</div>
                     <div className="font-bold text-green-600">${totals.totalPayout.toFixed(2)}</div>
                   </div>
                 </div>
@@ -492,7 +492,7 @@ export default function IntakeForm() {
               {/* Client Info Review */}
               <div className="mb-6">
                 <h4 className="font-medium mb-2">Contact Information</h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-black">
                   {formData.firstName} {formData.lastName}<br />
                   {formData.email} | {formData.phone}<br />
                   {formData.address.street}, {formData.address.city}, {formData.address.state} {formData.address.zipCode}
@@ -505,7 +505,7 @@ export default function IntakeForm() {
                 {formData.items.map((item, index) => (
                   <div key={index} className="bg-gray-50 p-3 rounded-md mb-2">
                     <div className="font-medium">{item.title}</div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-black">
                       {item.category} | ${item.estimatedValue} | {item.photos.length} photo(s)
                       {item.isSpecialty && <span className="ml-2 text-purple-600">• Specialty Item</span>}
                     </div>
@@ -514,7 +514,7 @@ export default function IntakeForm() {
               </div>
 
               <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-md mb-6">
-                <p className="text-sm text-yellow-800">
+                <p className="text-sm text-black">
                   <strong>Next Steps:</strong> After submitting, you'll receive a digital contract via email for electronic signature. 
                   Once signed, we'll schedule item pickup or drop-off.
                 </p>

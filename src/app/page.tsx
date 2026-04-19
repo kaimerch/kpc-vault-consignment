@@ -12,13 +12,13 @@ export default function Home() {
               <Package className="text-blue-600 mr-3" size={32} />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">KPC Vault</h1>
-                <p className="text-sm text-gray-600">Consignment Management System</p>
+                <p className="text-sm text-black">Consignment Management System</p>
               </div>
             </div>
             <nav className="hidden md:flex space-x-8">
-              <a href="#calculator" className="text-gray-600 hover:text-gray-900">Calculator</a>
-              <a href="/consign" className="text-gray-600 hover:text-gray-900">Consign Items</a>
-              <a href="/portal" className="text-gray-600 hover:text-gray-900">Client Portal</a>
+              <a href="#calculator" className="text-black hover:text-gray-900">Calculator</a>
+              <a href="/consign" className="text-black hover:text-gray-900">Consign Items</a>
+              <a href="/portal" className="text-black hover:text-gray-900">Client Portal</a>
             </nav>
           </div>
         </div>
@@ -49,7 +49,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Why Choose KPC Vault?</h3>
-            <p className="text-lg text-gray-600">Professional consignment services with transparent, competitive rates</p>
+            <p className="text-lg text-black">Professional consignment services with transparent, competitive rates</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -58,7 +58,7 @@ export default function Home() {
                 <TrendingUp className="text-blue-600" size={32} />
               </div>
               <h4 className="text-xl font-semibold mb-2">Dynamic Pricing</h4>
-              <p className="text-gray-600">
+              <p className="text-black">
                 Competitive commission rates based on item value: 25% for high-value items, up to 40% for smaller pieces
               </p>
             </div>
@@ -68,7 +68,7 @@ export default function Home() {
                 <FileText className="text-green-600" size={32} />
               </div>
               <h4 className="text-xl font-semibold mb-2">Digital Contracts</h4>
-              <p className="text-gray-600">
+              <p className="text-black">
                 Automated contract generation with electronic signatures and PDF delivery
               </p>
             </div>
@@ -78,7 +78,7 @@ export default function Home() {
                 <Users className="text-purple-600" size={32} />
               </div>
               <h4 className="text-xl font-semibold mb-2">Client Portal</h4>
-              <p className="text-gray-600">
+              <p className="text-black">
                 Real-time tracking of your items, sales status, and payment history
               </p>
             </div>
@@ -91,7 +91,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Commission Calculator</h3>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-black">
               See exactly what you'll earn with our transparent pricing structure
             </p>
           </div>
@@ -118,10 +118,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <Package className="text-gray-400 mr-2" size={24} />
-              <span className="text-gray-600">© 2024 KPC Vault. All rights reserved.</span>
+              <Package className="text-gray-900 mr-2" size={24} />
+              <span className="text-black">© 2024 KPC Vault. All rights reserved.</span>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-black">
               Built with Next.js • Powered by Airtable
             </div>
           </div>
