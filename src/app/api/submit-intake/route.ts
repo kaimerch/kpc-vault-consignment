@@ -1,6 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AirtableService } from '@/lib/airtable';
 import { calculateCommission } from '@/lib/commission';
+
+// Direct Airtable API functions
+const AIRTABLE_BASE_ID = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID;
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
+
+const createAirtableRecord = async (tableName: string, fields: any) => {
+  if (!AIRTABLE_BASE_ID || !AIRTABLE_API_KEY) {
+    throw new Error('Airtable configuration missing');
+  }
+
+  const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${tableName}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ fields })
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Airtable API error: ${response.status} - ${error}`);
+  }
+
+  const data = await response.json();
+  return data.id;
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,12 +41,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Create client in Airtable
-    const clientId = await AirtableService.createClient({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      address: formData.address
+    const clientId = await createAirtableRecord('Clients', {
+      'First Name': formData.firstName,
+      'Last Name': formData.lastName,
+      'Email': formData.email,
+      'Phone': formData.phone,
+      'Street': formData.address.street,
+      'City': formData.address.city,
+      'State': formData.address.state,
+      'Zip Code': formData.address.zipCode,
+      'Total Earnings': 0,
+      'Created Date': new Date().toISOString()
     });
 
     // Create items in Airtable
@@ -28,33 +59,33 @@ export async function POST(request: NextRequest) {
     for (const item of formData.items) {
       const commission = calculateCommission(item.estimatedValue, item.isSpecialty);
       
-      const itemData = {
-        title: item.title,
-        description: item.description,
-        estimatedValue: item.estimatedValue,
-        category: item.category,
-        isSpecialty: item.isSpecialty,
-        photos: [], // Photos will be handled separately
-        status: 'pending' as const,
-        consignedDate: new Date(),
-        commission: commission.commission
-      };
-
-      const itemId = await AirtableService.createItem(itemData, clientId);
+      const itemId = await createAirtableRecord('Items', {
+        'Title': item.title,
+        'Description': item.description,
+        'Estimated Value': item.estimatedValue,
+        'Category': item.category,
+        'Is Specialty': item.isSpecialty,
+        'Photos': '', // Will be handled separately
+        'Status': 'pending',
+        'Consigned Date': new Date().toISOString(),
+        'Commission': commission.commission,
+        'Client': [clientId]
+      });
+      
       itemIds.push(itemId);
     }
 
     // Create contract record
-    const contractId = await AirtableService.createContract({
-      clientId,
-      itemIds,
-      commissionRules: formData.items.map((item: any) => ({
+    const contractId = await createAirtableRecord('Contracts', {
+      'Client': [clientId],
+      'Items': itemIds,
+      'Commission Rules': JSON.stringify(formData.items.map((item: any) => ({
         itemTitle: item.title,
         commission: calculateCommission(item.estimatedValue, item.isSpecialty)
-      })),
-      createdDate: new Date(),
-      signature: '',
-      pdfUrl: ''
+      }))),
+      'Created Date': new Date().toISOString(),
+      'Signature': '',
+      'PDF URL': ''
     });
 
     return NextResponse.json({
@@ -66,8 +97,17 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Intake submission error:', error);
+    
+    // Return more detailed error for debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
     return NextResponse.json(
-      { error: 'Failed to submit intake form. Please try again.' },
+      { 
+        error: 'Failed to submit intake form. Please try again.',
+        debug: errorMessage,
+        hasBaseId: !!process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID,
+        hasApiKey: !!process.env.AIRTABLE_API_KEY
+      },
       { status: 500 }
     );
   }
