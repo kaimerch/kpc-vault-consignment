@@ -203,7 +203,7 @@ export default function IntakeForm() {
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <User className="text-blue-600" size={24} />
-                <h3 className="text-xl font-semibold">Your Information</h3>
+                <h3 className="text-xl font-semibold text-black">Your Information</h3>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -213,7 +213,8 @@ export default function IntakeForm() {
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => updateFormData('firstName', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                    placeholder="First Name"
                     required
                   />
                 </div>
@@ -224,7 +225,8 @@ export default function IntakeForm() {
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => updateFormData('lastName', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                    placeholder="Last Name"
                     required
                   />
                 </div>
@@ -235,7 +237,8 @@ export default function IntakeForm() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => updateFormData('email', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                    placeholder="your@email.com"
                     required
                   />
                 </div>
@@ -246,7 +249,8 @@ export default function IntakeForm() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => updateFormData('phone', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                    placeholder="(555) 123-4567"
                     required
                   />
                 </div>
@@ -257,7 +261,8 @@ export default function IntakeForm() {
                     type="text"
                     value={formData.address.street}
                     onChange={(e) => updateFormData('address.street', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                    placeholder="123 Main Street"
                     required
                   />
                 </div>
@@ -268,7 +273,8 @@ export default function IntakeForm() {
                     type="text"
                     value={formData.address.city}
                     onChange={(e) => updateFormData('address.city', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                    placeholder="City"
                     required
                   />
                 </div>
@@ -279,7 +285,8 @@ export default function IntakeForm() {
                     type="text"
                     value={formData.address.state}
                     onChange={(e) => updateFormData('address.state', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                    placeholder="State"
                     required
                   />
                 </div>
@@ -314,7 +321,7 @@ export default function IntakeForm() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <Package className="text-blue-600" size={24} />
-                  <h3 className="text-xl font-semibold">Item Information</h3>
+                  <h3 className="text-xl font-semibold text-black">Item Information</h3>
                 </div>
                 <button
                   type="button"
@@ -347,7 +354,8 @@ export default function IntakeForm() {
                         type="text"
                         value={item.title}
                         onChange={(e) => updateFormData(`items.${index}.title`, e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                        placeholder="Item Name"
                         required
                       />
                     </div>
@@ -357,7 +365,7 @@ export default function IntakeForm() {
                       <select
                         value={item.category}
                         onChange={(e) => updateFormData(`items.${index}.category`, e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                         required
                       >
                         <option value="">Select a category</option>
@@ -373,7 +381,8 @@ export default function IntakeForm() {
                         value={item.description}
                         onChange={(e) => updateFormData(`items.${index}.description`, e.target.value)}
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                        placeholder="Detailed description of the item including condition, brand, model, etc."
                         required
                       />
                     </div>
@@ -386,7 +395,8 @@ export default function IntakeForm() {
                         onChange={(e) => updateFormData(`items.${index}.estimatedValue`, parseFloat(e.target.value) || 0)}
                         min="0"
                         step="0.01"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                        placeholder="0.00"
                         required
                       />
                     </div>
@@ -467,7 +477,7 @@ export default function IntakeForm() {
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <FileText className="text-blue-600" size={24} />
-                <h3 className="text-xl font-semibold">Review Your Application</h3>
+                <h3 className="text-xl font-semibold text-black">Review Your Application</h3>
               </div>
 
               {/* Summary */}

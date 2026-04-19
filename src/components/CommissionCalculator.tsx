@@ -57,7 +57,7 @@ export default function CommissionCalculator({
                 placeholder="0.00"
                 min="0"
                 step="0.01"
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black placeholder-black"
               />
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function CommissionCalculator({
                 }`}
               >
                 <div className="font-medium">{rule.percentage}%</div>
-                <div className="text-xs opacity-80">{rule.description}</div>
+                <div className="text-xs font-medium text-black">{rule.description}</div>
               </div>
             ))}
           </div>
