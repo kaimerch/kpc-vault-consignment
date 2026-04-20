@@ -107,13 +107,17 @@ export async function POST(request: NextRequest) {
     
     // Return more detailed error for debugging
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : 'No stack';
     
     return NextResponse.json(
       { 
         error: 'Failed to submit intake form. Please try again.',
         debug: errorMessage,
+        stack: errorStack,
         hasBaseId: !!process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID,
-        hasApiKey: !!process.env.AIRTABLE_API_KEY
+        hasApiKey: !!process.env.AIRTABLE_API_KEY,
+        baseId: process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID,
+        formDataReceived: !!formData
       },
       { status: 500 }
     );
