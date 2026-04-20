@@ -129,14 +129,19 @@ export default function IntakeForm() {
     setIsSubmitting(true);
 
     try {
-      // Direct frontend submission to Airtable (bypass Vercel API issues)
+      // Debug info first
       const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID || 'appvw5Ibiqjex2Mq1';
-      
-      // You'll need to set this as environment variable in Vercel
       const apiToken = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
       
+      console.log('Debug info:', {
+        hasBaseId: !!baseId,
+        baseId: baseId,
+        hasApiToken: !!apiToken,
+        tokenStart: apiToken ? apiToken.substring(0, 10) + '...' : 'null'
+      });
+      
       if (!apiToken) {
-        throw new Error('Airtable API token not configured. Please add NEXT_PUBLIC_AIRTABLE_TOKEN to your Vercel environment variables.');
+        throw new Error(`Airtable API token not configured. Environment check: BaseID=${baseId}, Token=${!!apiToken}`);
       }
 
       // Create client record directly from frontend
