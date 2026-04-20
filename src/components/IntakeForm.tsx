@@ -129,7 +129,7 @@ export default function IntakeForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/debug-submit', {
+      const response = await fetch('/api/submit-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
