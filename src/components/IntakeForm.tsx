@@ -139,7 +139,10 @@ export default function IntakeForm() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Submission failed');
+        console.error('Detailed error:', errorData);
+        const debugInfo = errorData.debug ? `\nDebug: ${errorData.debug}` : '';
+        const stackInfo = errorData.stack ? `\nStack: ${errorData.stack}` : '';
+        throw new Error(`${errorData.error || 'Submission failed'}${debugInfo}${stackInfo}`);
       }
 
       const result = await response.json();
