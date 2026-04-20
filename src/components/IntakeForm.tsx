@@ -129,21 +129,88 @@ export default function IntakeForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/submit', {
+      // Direct frontend submission to Airtable (bypass Vercel API issues)
+      const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID || 'appvw5Ibiqjex2Mq1';
+      
+      // You'll need to set this as environment variable in Vercel
+      const apiToken = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
+      
+      if (!apiToken) {
+        throw new Error('Airtable API token not configured. Please add NEXT_PUBLIC_AIRTABLE_TOKEN to your Vercel environment variables.');
+      }
+
+      // Create client record directly from frontend
+      const clientResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Clients`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiToken}`,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          fields: {
+            'First Name': formData.firstName,
+            'Last Name': formData.lastName,
+            'Email': formData.email,
+            'Phone': formData.phone,
+            'Street': formData.address.street,
+            'City': formData.address.city,
+            'State': formData.address.state,
+            'Zip Code': formData.address.zipCode,
+            'Total Earnings': 0,
+            'Created Date': new Date().toISOString()
+          }
+        })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Detailed error:', errorData);
-        const debugInfo = errorData.debug ? `\nDebug: ${errorData.debug}` : '';
-        const stackInfo = errorData.stack ? `\nStack: ${errorData.stack}` : '';
-        throw new Error(`${errorData.error || 'Submission failed'}${debugInfo}${stackInfo}`);
+      if (!clientResponse.ok) {
+        const errorText = await clientResponse.text();
+        throw new Error(`Failed to create client: ${clientResponse.status} - ${errorText}`);
       }
+
+      const clientData = await clientResponse.json();
+      const clientId = clientData.id;
+
+      // Create items
+      for (const item of formData.items) {
+        const commission = calculateCommission(item.estimatedValue, item.isSpecialty);
+        
+        const itemResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Items`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fields: {
+              'Title': item.title,
+              'Description': item.description,
+              'Estimated Value': item.estimatedValue,
+              'Category': item.category,
+              'Is Specialty': item.isSpecialty,
+              'Photos': '',
+              'Status': 'pending',
+              'Consigned Date': new Date().toISOString(),
+              'Commission': commission.commission,
+              'Client': [clientId]
+            }
+          })
+        });
+
+        if (!itemResponse.ok) {
+          const errorText = await itemResponse.text();
+          throw new Error(`Failed to create item: ${itemResponse.status} - ${errorText}`);
+        }
+      }
+
+      // Create a fake response object for the existing success handling
+      const response = { 
+        ok: true, 
+        json: () => Promise.resolve({ 
+          success: true, 
+          clientId,
+          message: 'Application submitted successfully!' 
+        }) 
+      };
 
       const result = await response.json();
       
