@@ -125,86 +125,23 @@ export default function IntakeForm() {
     setIsSubmitting(true);
 
     try {
-      // Direct Airtable submission - proven working approach
-      const baseId = 'appvw5Ibiqjex2Mq1';
-      const apiToken = 'pat' + 'OnPJGTkkx857Pj' + '.f31143cda07d58b6a8af386af542f3f3877e62196ba2946918fec6c590194320';
+      console.log('🚀 Submitting application via secure API...');
 
-      console.log('🚀 Submitting to Airtable...');
-
-      // Create client record
-      const clientFields: Record<string, any> = {
-        'First Name': formData.firstName,
-        'Last Name': formData.lastName,
-        'Email': formData.email,
-        'Phone': formData.phone,
-        'Street': formData.address.street,
-        'City': formData.address.city
-      };
-
-      console.log('📤 Creating client:', clientFields);
-
-      const clientResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Clients`, {
+      const response = await fetch('/api/submit', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          fields: clientFields,
-          typecast: true
-        })
+        body: JSON.stringify(formData)
       });
 
-      if (!clientResponse.ok) {
-        const errorText = await clientResponse.text();
-        console.error('❌ Client creation failed:', errorText);
-        throw new Error(`Client creation failed: ${clientResponse.status} - ${errorText}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Submission failed');
       }
 
-      const clientData = await clientResponse.json();
-      const clientId = clientData.id;
-      console.log('✅ Client created:', clientId);
-
-      // Create items
-      for (let i = 0; i < formData.items.length; i++) {
-        const item = formData.items[i];
-        const commission = calculateCommission(item.estimatedValue, item.isSpecialty);
-
-        const itemFields: Record<string, any> = {
-          'Title': item.title,
-          'Description': item.description,
-          'Estimated Value': item.estimatedValue,
-          'Commission': commission.commission,
-          'Is Specialty': item.isSpecialty || false,
-          'Status': 'pending',
-          'Consigned Date': new Date().toISOString().split('T')[0],
-          'Client': [clientId]
-        };
-
-        console.log(`📤 Creating item ${i + 1}:`, itemFields);
-
-        const itemResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Items`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiToken}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            fields: itemFields,
-            typecast: true
-          })
-        });
-
-        if (!itemResponse.ok) {
-          const errorText = await itemResponse.text();
-          console.error(`❌ Item ${i + 1} creation failed:`, errorText);
-          throw new Error(`Item creation failed: ${itemResponse.status} - ${errorText}`);
-        }
-
-        console.log(`✅ Item ${i + 1} created`);
-      }
-
-      console.log('🎉 ALL RECORDS CREATED SUCCESSFULLY');
+      const result = await response.json();
+      console.log('✅ Application submitted successfully:', result);
       setSubmitSuccess(true);
 
     } catch (error) {
