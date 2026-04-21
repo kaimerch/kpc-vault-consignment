@@ -23,23 +23,14 @@ export const DirectSubmission = ({ formData, onSuccess, onError }: SubmissionPro
       console.log(`Base ID: ${baseId}`);
       console.log(`Token: ${apiToken.substring(0, 15)}...`);
       
-      // First, figure out what fields exist in the Clients table
-      console.log('📋 Checking Clients table fields...');
-      const listResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Clients?maxRecords=0`, {
-        headers: {
-          'Authorization': `Bearer ${apiToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (listResponse.ok) {
-        const listData = await listResponse.json();
-        console.log('📋 Clients table response:', listData);
-      }
-
-      // Create client - use only Name field which Airtable always has
+      // Match EXACT Airtable field names from Ernie's screenshot
       const clientFields: Record<string, any> = {
-        'Name': `${formData.firstName} ${formData.lastName}`
+        'First Name': formData.firstName,
+        'Last Name': formData.lastName,
+        'Email': formData.email,
+        'Phone': formData.phone,
+        'Street': formData.address?.street || '',
+        'City': formData.address?.city || ''
       };
       
       console.log('📤 Creating client with fields:', clientFields);
