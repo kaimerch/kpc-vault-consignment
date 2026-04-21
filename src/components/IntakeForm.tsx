@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Upload, User, Package, FileText, Camera } from 'lucide-react';
 import CommissionCalculator from './CommissionCalculator';
 import { calculateCommission } from '@/lib/commission';
-import { AirtableService } from '@/lib/airtable';
+import { DirectSubmission } from './DirectSubmission';
 
 interface FormData {
   // Client information
@@ -60,6 +60,9 @@ export default function IntakeForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commissionCalculations, setCommissionCalculations] = useState<any[]>([]);
+  const [showDirectSubmission, setShowDirectSubmission] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<any>(null);
+  const [submissionError, setSubmissionError] = useState('');
 
   const updateFormData = (path: string, value: any) => {
     setFormData(prev => {
