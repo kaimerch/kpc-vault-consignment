@@ -23,7 +23,27 @@ export const DirectSubmission = ({ formData, onSuccess, onError }: SubmissionPro
       console.log(`Base ID: ${baseId}`);
       console.log(`Token: ${apiToken.substring(0, 15)}...`);
       
-      // Create client
+      // First, figure out what fields exist in the Clients table
+      console.log('📋 Checking Clients table fields...');
+      const listResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Clients?maxRecords=0`, {
+        headers: {
+          'Authorization': `Bearer ${apiToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (listResponse.ok) {
+        const listData = await listResponse.json();
+        console.log('📋 Clients table response:', listData);
+      }
+
+      // Create client - use only Name field which Airtable always has
+      const clientFields: Record<string, any> = {
+        'Name': `${formData.firstName} ${formData.lastName}`
+      };
+      
+      console.log('📤 Creating client with fields:', clientFields);
+      
       const clientResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Clients`, {
         method: 'POST',
         headers: {
@@ -31,18 +51,8 @@ export const DirectSubmission = ({ formData, onSuccess, onError }: SubmissionPro
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          fields: {
-            'First Name': formData.firstName,
-            'Last Name': formData.lastName,
-            'Email': formData.email,
-            'Phone': formData.phone,
-            'Street': formData.address.street,
-            'City': formData.address.city,  
-            'State': formData.address.state,
-            'Zip Code': formData.address.zipCode,
-            'Total Earnings': 0,
-            'Created Date': new Date().toISOString()
-          }
+          fields: clientFields,
+          typecast: true
         })
       });
 
@@ -73,6 +83,17 @@ export const DirectSubmission = ({ formData, onSuccess, onError }: SubmissionPro
         }
         const commission = estimatedValue * commissionRate;
         
+        const itemFields: Record<string, any> = {
+          'Name': item.title,
+          'Description': item.description,
+          'Estimated Value': estimatedValue,
+          'Category': item.category,
+          'Status': 'pending',
+          'Commission': commission
+        };
+        
+        console.log(`📤 Creating item ${i+1} with fields:`, itemFields);
+        
         const itemResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Items`, {
           method: 'POST',
           headers: {
@@ -80,18 +101,8 @@ export const DirectSubmission = ({ formData, onSuccess, onError }: SubmissionPro
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            fields: {
-              'Title': item.title,
-              'Description': item.description,
-              'Estimated Value': estimatedValue,
-              'Category': item.category,
-              'Is Specialty': item.isSpecialty,
-              'Photos': '',
-              'Status': 'pending',
-              'Consigned Date': new Date().toISOString(),
-              'Commission': commission,
-              'Client': [clientId]
-            }
+            fields: itemFields,
+            typecast: true
           })
         });
 
