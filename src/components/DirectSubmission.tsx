@@ -75,12 +75,14 @@ export const DirectSubmission = ({ formData, onSuccess, onError }: SubmissionPro
         const commission = estimatedValue * commissionRate;
         
         const itemFields: Record<string, any> = {
-          'Name': item.title,
+          'Title': item.title,
           'Description': item.description,
           'Estimated Value': estimatedValue,
-          'Category': item.category,
+          'Commission': commission,
+          'Is Specialty': item.isSpecialty || false,
           'Status': 'pending',
-          'Commission': commission
+          'Consigned Date': new Date().toISOString().split('T')[0],
+          'Client': [clientId]
         };
         
         console.log(`📤 Creating item ${i+1} with fields:`, itemFields);
