@@ -28,7 +28,9 @@ export async function POST(request: NextRequest) {
           'Email': formData.email,
           'Phone': formData.phone,
           'Street': formData.address?.street || '',
-          'City': formData.address?.city || ''
+          'City': formData.address?.city || '',
+          'State': formData.address?.state || '',
+          'Zip Code': formData.address?.zipCode || ''
         },
         typecast: true
       })
