@@ -4,7 +4,7 @@ import { Client, Item, Contract, Sale } from '@/types';
 // Airtable configuration
 // Note: These will need to be set in environment variables
 const AIRTABLE_BASE_ID = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID || '';
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY || '';
+const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY || '';
 
 if (!AIRTABLE_BASE_ID || !AIRTABLE_API_KEY) {
   console.warn('Airtable configuration missing. Please set NEXT_PUBLIC_AIRTABLE_BASE_ID and AIRTABLE_API_KEY environment variables.');
@@ -63,17 +63,17 @@ export class AirtableService {
       
       return {
         id: record.id,
-        firstName: record.fields['First Name'] as string,
-        lastName: record.fields['Last Name'] as string,
-        email: record.fields['Email'] as string,
-        phone: record.fields['Phone'] as string,
+        firstName: (record.fields['First Name'] as string || '').trim(),
+        lastName: (record.fields['Last Name'] as string || '').trim(),
+        email: (record.fields['Email'] as string) || '',
+        phone: (record.fields['Phone'] as string) || '',
         address: {
-          street: record.fields['Street'] as string,
-          city: record.fields['City'] as string,
-          state: record.fields['State'] as string,
-          zipCode: record.fields['Zip Code'] as string
+          street: (record.fields['Street'] as string || '').trim(),
+          city: (record.fields['City'] as string) || '',
+          state: (record.fields['State'] as string) || '',
+          zipCode: (record.fields['Zip Code'] as string) || ''
         },
-        items: [], // Will be populated separately
+        items: [],
         totalEarnings: (record.fields['Total Earnings'] as number) || 0
       };
     } catch (error) {
@@ -111,7 +111,7 @@ export class AirtableService {
     try {
       const records = await base(TABLES.ITEMS)
         .select({
-          filterByFormula: `{Client} = '${clientId}'`,
+          filterByFormula: `FIND('${clientId}', ARRAYJOIN({Client}))`,
           sort: [{ field: 'Consigned Date', direction: 'desc' }]
         })
         .all();
@@ -180,7 +180,7 @@ export class AirtableService {
     try {
       const records = await base(TABLES.SALES)
         .select({
-          filterByFormula: `{Client} = '${clientId}'`,
+          filterByFormula: `FIND('${clientId}', ARRAYJOIN({Client}))`,
           sort: [{ field: 'Sale Date', direction: 'desc' }]
         })
         .all();

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ClientPortal from '@/components/ClientPortal';
 import DemoClientPortal from '@/components/DemoClientPortal';
 import { Search, User, Shield, Star } from 'lucide-react';
 import Image from 'next/image';
@@ -125,7 +126,7 @@ export default function PortalPage() {
       
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <DemoClientPortal clientId={clientId} />
+          <ClientPortal clientId={clientId} />
         </div>
       </div>
     </main>
