@@ -1,0 +1,456 @@
+'use client';
+
+import React from 'react';
+import { User, Package, TrendingUp, DollarSign, Calendar, Search, Download, Eye, Bell, Star } from 'lucide-react';
+import { formatCurrency } from '@/lib/commission';
+
+interface DemoClientPortalProps {
+  clientId?: string;
+}
+
+// Hard-coded demo data that always works
+const DEMO_CLIENT = {
+  id: 'demo-client-123',
+  firstName: 'John',
+  lastName: 'Smith',
+  email: 'john.smith@email.com',
+  phone: '(555) 123-4567',
+  address: {
+    street: '123 Main Street',
+    city: 'San Francisco',
+    state: 'CA',
+    zipCode: '94105'
+  },
+  totalEarnings: 12500
+};
+
+const DEMO_ITEMS = [
+  {
+    id: 'item-1',
+    title: 'Vintage Rolex Submariner',
+    description: 'Authentic 1970s Rolex Submariner in excellent condition with original box and papers.',
+    estimatedValue: 8500,
+    category: 'Watches',
+    isSpecialty: true,
+    photos: ['rolex1.jpg', 'rolex2.jpg'],
+    status: 'sold' as const,
+    consignedDate: new Date('2024-01-15'),
+    soldDate: new Date('2024-02-20'),
+    soldPrice: 9200,
+    commission: 2300
+  },
+  {
+    id: 'item-2',
+    title: 'Mid-Century Modern Dining Set',
+    description: 'Beautiful walnut dining table with 6 matching chairs, designed in the 1960s.',
+    estimatedValue: 2800,
+    category: 'Furniture',
+    isSpecialty: false,
+    photos: ['dining1.jpg'],
+    status: 'active' as const,
+    consignedDate: new Date('2024-03-10'),
+  },
+  {
+    id: 'item-3',
+    title: 'Original Oil Painting',
+    description: 'Signed abstract expressionist painting by local artist, circa 1980s.',
+    estimatedValue: 1200,
+    category: 'Art',
+    isSpecialty: true,
+    photos: ['painting1.jpg', 'painting2.jpg', 'painting3.jpg'],
+    status: 'sold' as const,
+    consignedDate: new Date('2024-02-05'),
+    soldDate: new Date('2024-03-15'),
+    soldPrice: 1400,
+    commission: 420
+  },
+  {
+    id: 'item-4',
+    title: 'Designer Handbag Collection',
+    description: 'Set of 3 authentic luxury handbags: Chanel, Louis Vuitton, and Hermès.',
+    estimatedValue: 4500,
+    category: 'Fashion',
+    isSpecialty: true,
+    photos: ['bags1.jpg'],
+    status: 'pending' as const,
+    consignedDate: new Date('2024-04-01'),
+  }
+];
+
+const DEMO_SALES = [
+  {
+    id: 'sale-1',
+    itemId: 'item-1',
+    clientId: 'demo-client-123',
+    salePrice: 9200,
+    commission: 2300,
+    clientPayout: 6900,
+    saleDate: new Date('2024-02-20'),
+    paymentStatus: 'paid' as const
+  },
+  {
+    id: 'sale-2',
+    itemId: 'item-3',
+    clientId: 'demo-client-123',
+    salePrice: 1400,
+    commission: 420,
+    clientPayout: 980,
+    saleDate: new Date('2024-03-15'),
+    paymentStatus: 'paid' as const
+  }
+];
+
+export default function DemoClientPortal({ clientId }: DemoClientPortalProps) {
+  const [activeTab, setActiveTab] = React.useState<'items' | 'sales' | 'profile'>('items');
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  const client = DEMO_CLIENT;
+  const items = DEMO_ITEMS;
+  const sales = DEMO_SALES;
+
+  const filteredItems = items.filter(item => 
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getStatusColor = (status: string) => {
+    const colors = {
+      'pending': 'bg-yellow-100 text-yellow-800',
+      'active': 'bg-blue-100 text-blue-800',
+      'sold': 'bg-green-100 text-green-800',
+      'returned': 'bg-gray-100 text-gray-800'
+    };
+    return colors[status] || 'bg-gray-100 text-gray-800';
+  };
+
+  const getTotalStats = () => {
+    const totalValue = items.reduce((sum, item) => sum + item.estimatedValue, 0);
+    const soldItems = items.filter(item => item.status === 'sold');
+    const totalSales = soldItems.reduce((sum, item) => sum + (item.soldPrice || 0), 0);
+    const totalEarnings = sales.reduce((sum, sale) => sum + sale.clientPayout, 0);
+
+    return {
+      totalItems: items.length,
+      activeItems: items.filter(item => item.status === 'active').length,
+      soldItems: soldItems.length,
+      totalValue,
+      totalSales,
+      totalEarnings
+    };
+  };
+
+  const stats = getTotalStats();
+
+  return (
+    <div className="max-w-6xl mx-auto p-6">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+          <div className="flex items-center space-x-4">
+            <div className="bg-gradient-to-br from-blue-100 to-yellow-100 rounded-full p-3 shadow-md">
+              <User className="text-blue-800" size={24} />
+            </div>
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+                Welcome back, {client.firstName} {client.lastName}
+              </h1>
+              <p className="text-gray-600 flex items-center">
+                <span className="mr-2">{client.email}</span>
+                <div className="flex text-yellow-400">
+                  <Star size={14} />
+                  <span className="text-xs text-gray-500 ml-1">Premium Client</span>
+                </div>
+              </p>
+            </div>
+          </div>
+          <div className="text-center lg:text-right">
+            <div className="text-3xl font-bold text-green-600">
+              {formatCurrency(stats.totalEarnings)}
+            </div>
+            <div className="text-sm text-gray-600 mb-2">Total Earnings</div>
+            <div className="flex space-x-2 justify-center lg:justify-end">
+              <button className="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-700 transition-colors flex items-center">
+                <Download size={12} className="mr-1" />
+                Export
+              </button>
+              <button className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors flex items-center">
+                <Bell size={12} className="mr-1" />
+                Alerts
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Items</p>
+              <p className="text-2xl font-bold text-gray-900">{stats.totalItems}</p>
+              <p className="text-xs text-gray-500 mt-1">All time</p>
+            </div>
+            <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-full p-3">
+              <Package className="text-blue-700" size={24} />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Active Items</p>
+              <p className="text-2xl font-bold text-blue-600">{stats.activeItems}</p>
+              <p className="text-xs text-gray-500 mt-1">Currently listed</p>
+            </div>
+            <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-full p-3">
+              <TrendingUp className="text-blue-700" size={24} />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Sold Items</p>
+              <p className="text-2xl font-bold text-green-600">{stats.soldItems}</p>
+              <p className="text-xs text-green-600 mt-1">
+                {stats.totalItems > 0 ? Math.round((stats.soldItems / stats.totalItems) * 100) : 0}% success rate
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-full p-3">
+              <DollarSign className="text-green-700" size={24} />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Sales</p>
+              <p className="text-2xl font-bold text-yellow-600">{formatCurrency(stats.totalSales)}</p>
+              <p className="text-xs text-gray-500 mt-1">Gross revenue</p>
+            </div>
+            <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full p-3">
+              <Calendar className="text-yellow-700" size={24} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-8 px-6">
+            {[
+              { key: 'items', label: 'My Items', icon: Package, count: stats.totalItems },
+              { key: 'sales', label: 'Sales History', icon: DollarSign, count: stats.soldItems },
+              { key: 'profile', label: 'Profile', icon: User }
+            ].map(({ key, label, icon: Icon, count }) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key as any)}
+                className={`flex items-center space-x-2 py-4 border-b-3 font-medium text-sm transition-all ${
+                  activeTab === key
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-blue-600 hover:border-gray-300'
+                }`}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+                {count !== undefined && (
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    activeTab === key ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="p-6">
+          {/* Items Tab */}
+          {activeTab === 'items' && (
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Your Consigned Items</h3>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                  <input
+                    type="text"
+                    placeholder="Search items..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {filteredItems.map((item) => (
+                  <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-start space-x-3 flex-1">
+                        <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg w-16 h-16 flex items-center justify-center">
+                          {item.photos.length > 0 ? (
+                            <div className="relative w-full h-full rounded-lg overflow-hidden">
+                              <div className="absolute inset-0 bg-blue-100 flex items-center justify-center">
+                                <Eye className="text-blue-600" size={20} />
+                              </div>
+                              <span className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs px-1 py-0.5 text-center">
+                                {item.photos.length} photo{item.photos.length > 1 ? 's' : ''}
+                              </span>
+                            </div>
+                          ) : (
+                            <Package className="text-gray-400" size={20} />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <h4 className="font-semibold text-gray-900 text-lg">{item.title}</h4>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
+                              {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2 line-clamp-2">{item.description}</p>
+                          <div className="flex flex-wrap gap-3 text-sm text-gray-500">
+                            <span className="bg-gray-100 px-2 py-1 rounded text-xs">{item.category}</span>
+                            <span>Est. {formatCurrency(item.estimatedValue)}</span>
+                            <span>{item.consignedDate.toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Status-specific info */}
+                    {item.status === 'sold' && item.soldPrice && (
+                      <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                        <div className="flex justify-between items-center">
+                          <span className="text-green-700 font-medium">Sold!</span>
+                          <span className="text-green-600 font-semibold">{formatCurrency(item.soldPrice)}</span>
+                        </div>
+                        <div className="text-xs text-green-600 mt-1">
+                          {item.soldDate && `Sold on ${item.soldDate.toLocaleDateString()}`}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {item.status === 'active' && (
+                      <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="flex justify-between items-center">
+                          <span className="text-blue-700 font-medium">Active Listing</span>
+                          <button className="text-blue-600 text-xs hover:text-blue-800 flex items-center">
+                            <Eye size={12} className="mr-1" />
+                            View Listing
+                          </button>
+                        </div>
+                        <div className="text-xs text-blue-600 mt-1">
+                          {Math.floor((new Date().getTime() - item.consignedDate.getTime()) / (1000 * 60 * 60 * 24))} days active
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {filteredItems.length === 0 && (
+                  <div className="col-span-2 text-center py-8">
+                    <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-gray-500">
+                      {searchTerm ? 'No items found matching your search.' : 'No items consigned yet.'}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Sales Tab */}
+          {activeTab === 'sales' && (
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Sales History</h3>
+              
+              <div className="space-y-4">
+                {sales.map((sale) => {
+                  const item = items.find(i => i.id === sale.itemId);
+                  return (
+                    <div key={sale.id} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium text-gray-900">{item?.title || 'Unknown Item'}</h4>
+                          <p className="text-sm text-gray-500">Sold on {sale.saleDate.toLocaleDateString()}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-semibold">{formatCurrency(sale.salePrice)}</div>
+                          <div className="text-sm text-gray-500">
+                            Commission: {formatCurrency(sale.commission)}
+                          </div>
+                          <div className="text-green-600 font-medium">
+                            Your Payout: {formatCurrency(sale.clientPayout)}
+                          </div>
+                          <div className={`text-xs mt-1 ${
+                            sale.paymentStatus === 'paid' ? 'text-green-600' : 
+                            sale.paymentStatus === 'pending' ? 'text-yellow-600' : 'text-red-600'
+                          }`}>
+                            Payment: {sale.paymentStatus}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {sales.length === 0 && (
+                  <div className="text-center py-8">
+                    <DollarSign className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-gray-500">No sales yet.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Profile Tab */}
+          {activeTab === 'profile' && (
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Profile Information</h3>
+              
+              <div className="max-w-md space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Name</label>
+                  <p className="text-gray-900">{client.firstName} {client.lastName}</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                  <p className="text-gray-900">{client.email}</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+                  <p className="text-gray-900">{client.phone}</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Address</label>
+                  <p className="text-gray-900">
+                    {client.address.street}<br />
+                    {client.address.city}, {client.address.state} {client.address.zipCode}
+                  </p>
+                </div>
+
+                <div className="pt-4">
+                  <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                    Edit Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

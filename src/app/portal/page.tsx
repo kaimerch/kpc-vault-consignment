@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ClientPortal from '@/components/ClientPortal';
+import DemoClientPortal from '@/components/DemoClientPortal';
 import { Search, User, Shield, Star } from 'lucide-react';
 import Image from 'next/image';
 
@@ -90,12 +90,12 @@ export default function PortalPage() {
                   <Star className="text-yellow-600" size={14} />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-gray-700 mb-1">Try the Demo</p>
+                  <p className="text-xs font-medium text-gray-700 mb-1">Demo Portal Access</p>
                   <p className="text-xs text-gray-600 mb-2">
-                    Use <strong>demo-client-123</strong> to see the portal with sample data
+                    Enter <strong>any text</strong> to access the demo portal
                   </p>
                   <p className="text-xs text-gray-500">
-                    Includes: luxury items, sales history, and client dashboard
+                    Features: $12,500 earnings, luxury consignments, sales history
                   </p>
                 </div>
               </div>
@@ -125,7 +125,7 @@ export default function PortalPage() {
       
       <div className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ClientPortal clientId={clientId} />
+          <DemoClientPortal clientId={clientId} />
         </div>
       </div>
     </main>
