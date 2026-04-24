@@ -50,12 +50,17 @@ export async function GET(request: NextRequest) {
     try {
       const itemRecords = await base('Items')
         .select({
-          filterByFormula: `FIND('${clientId}', ARRAYJOIN({Client}))`,
           sort: [{ field: 'Consigned Date', direction: 'desc' }]
         })
         .all();
 
-      items = itemRecords.map((record: any) => ({
+      // Filter items that belong to this client (linked record field)
+      const clientItems = itemRecords.filter((record: any) => {
+        const clientLinks = record.fields['Client'] as string[] | undefined;
+        return clientLinks && clientLinks.includes(clientId);
+      });
+
+      items = clientItems.map((record: any) => ({
         id: record.id,
         title: (record.fields['Title'] as string) || '',
         description: (record.fields['Description'] as string) || '',
@@ -80,12 +85,17 @@ export async function GET(request: NextRequest) {
     try {
       const saleRecords = await base('Sales')
         .select({
-          filterByFormula: `FIND('${clientId}', ARRAYJOIN({Client}))`,
           sort: [{ field: 'Sale Date', direction: 'desc' }]
         })
         .all();
 
-      sales = saleRecords.map((record: any) => ({
+      // Filter to only this client's sales
+      const filteredSales = saleRecords.filter((record: any) => {
+        const clientLinks = record.fields['Client'] as string[] | undefined;
+        return clientLinks && clientLinks.includes(clientId);
+      });
+
+      sales = filteredSales.map((record: any) => ({
         id: record.id,
         itemId: (record.fields['Item'] as string[])?.[0] || '',
         clientId: (record.fields['Client'] as string[])?.[0] || '',
