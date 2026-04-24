@@ -18,8 +18,11 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    if (clientId) {
-      loadClientData(clientId);
+    // Check for stored client ID from magic link login
+    const storedClientId = clientId || sessionStorage.getItem('kpc_client_id');
+    
+    if (storedClientId) {
+      loadClientData(storedClientId);
     }
   }, [clientId]);
 
