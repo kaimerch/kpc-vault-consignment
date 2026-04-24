@@ -11,7 +11,9 @@ export default function PortalPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (clientId.trim()) {
+    const trimmedId = clientId.trim();
+    if (trimmedId) {
+      console.log('Logging in with ID:', trimmedId);
       setIsLoggedIn(true);
     }
   };
