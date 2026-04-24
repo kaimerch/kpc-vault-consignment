@@ -4,7 +4,7 @@ import { Client, Item, Contract, Sale } from '@/types';
 // Airtable configuration
 // Note: These will need to be set in environment variables
 const AIRTABLE_BASE_ID = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID || '';
-const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY || '';
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY || '';
 
 if (!AIRTABLE_BASE_ID || !AIRTABLE_API_KEY) {
   console.warn('Airtable configuration missing. Please set NEXT_PUBLIC_AIRTABLE_BASE_ID and AIRTABLE_API_KEY environment variables.');

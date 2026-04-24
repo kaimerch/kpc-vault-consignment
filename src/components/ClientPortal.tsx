@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { User, Package, TrendingUp, DollarSign, Calendar, Search, Download, Eye, Bell, Star } from 'lucide-react';
-import { AirtableService } from '@/lib/airtable';
 import { Client, Item, Sale } from '@/types';
 import { formatCurrency } from '@/lib/commission';
 
@@ -21,25 +20,6 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
   useEffect(() => {
     if (clientId) {
       loadClientData(clientId);
-    } else {
-      // Auto-create demo if no clientId
-      const autoDemo: Client = {
-        id: 'auto-demo',
-        firstName: 'Demo',
-        lastName: 'User',
-        email: 'demo@kpcvault.com',
-        phone: '(555) 123-4567',
-        address: {
-          street: '123 Demo Street',
-          city: 'San Francisco',
-          state: 'CA',
-          zipCode: '94105'
-        },
-        items: [],
-        totalEarnings: 0
-      };
-      setClient(autoDemo);
-      setLoading(false);
     }
   }, [clientId]);
 
@@ -47,185 +27,38 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
     try {
       setLoading(true);
       
-      console.log('Loading client data for ID:', id);
+      // Fetch from secure server-side API
+      const res = await fetch(`/api/portal?clientId=${encodeURIComponent(id)}`);
       
-      // Always use demo data for now (until Airtable is properly configured)
-      // Demo data for testing
-      const isDemoRequest = id === 'demo-client-123' || id.toLowerCase().includes('demo') || id === 'demo' || id === 'test';
-      
-      if (isDemoRequest || true) { // Force demo mode
-        console.log('Using demo data for:', id);
-        const demoClient: Client = {
-          id: 'demo-client-123',
-          firstName: 'John',
-          lastName: 'Smith',
-          email: 'john.smith@email.com',
-          phone: '(555) 123-4567',
-          address: {
-            street: '123 Main Street',
-            city: 'San Francisco',
-            state: 'CA',
-            zipCode: '94105'
-          },
-          items: [],
-          totalEarnings: 12500
+      if (res.ok) {
+        const data = await res.json();
+        
+        // Parse dates from API response
+        const clientData: Client = {
+          ...data.client,
+          items: []
         };
         
-        const demoItems: Item[] = [
-          {
-            id: 'item-1',
-            title: 'Vintage Rolex Submariner',
-            description: 'Authentic 1970s Rolex Submariner in excellent condition with original box and papers.',
-            estimatedValue: 8500,
-            category: 'Watches',
-            isSpecialty: true,
-            photos: ['rolex1.jpg', 'rolex2.jpg'],
-            status: 'sold',
-            consignedDate: new Date('2024-01-15'),
-            soldDate: new Date('2024-02-20'),
-            soldPrice: 9200,
-            commission: 2300
-          },
-          {
-            id: 'item-2',
-            title: 'Mid-Century Modern Dining Set',
-            description: 'Beautiful walnut dining table with 6 matching chairs, designed in the 1960s.',
-            estimatedValue: 2800,
-            category: 'Furniture',
-            isSpecialty: false,
-            photos: ['dining1.jpg'],
-            status: 'active',
-            consignedDate: new Date('2024-03-10'),
-          },
-          {
-            id: 'item-3',
-            title: 'Original Oil Painting',
-            description: 'Signed abstract expressionist painting by local artist, circa 1980s.',
-            estimatedValue: 1200,
-            category: 'Art',
-            isSpecialty: true,
-            photos: ['painting1.jpg', 'painting2.jpg', 'painting3.jpg'],
-            status: 'sold',
-            consignedDate: new Date('2024-02-05'),
-            soldDate: new Date('2024-03-15'),
-            soldPrice: 1400,
-            commission: 420
-          },
-          {
-            id: 'item-4',
-            title: 'Designer Handbag Collection',
-            description: 'Set of 3 authentic luxury handbags: Chanel, Louis Vuitton, and Hermès.',
-            estimatedValue: 4500,
-            category: 'Fashion',
-            isSpecialty: true,
-            photos: ['bags1.jpg'],
-            status: 'pending',
-            consignedDate: new Date('2024-04-01'),
-          }
-        ];
+        const itemsData: Item[] = (data.items || []).map((item: any) => ({
+          ...item,
+          consignedDate: item.consignedDate ? new Date(item.consignedDate) : new Date(),
+          soldDate: item.soldDate ? new Date(item.soldDate) : undefined
+        }));
         
-        const demoSales: Sale[] = [
-          {
-            id: 'sale-1',
-            itemId: 'item-1',
-            clientId: 'demo-client-123',
-            salePrice: 9200,
-            commission: 2300,
-            clientPayout: 6900,
-            saleDate: new Date('2024-02-20'),
-            paymentStatus: 'paid'
-          },
-          {
-            id: 'sale-2',
-            itemId: 'item-3',
-            clientId: 'demo-client-123',
-            salePrice: 1400,
-            commission: 420,
-            clientPayout: 980,
-            saleDate: new Date('2024-03-15'),
-            paymentStatus: 'paid'
-          }
-        ];
+        const salesData: Sale[] = (data.sales || []).map((sale: any) => ({
+          ...sale,
+          saleDate: sale.saleDate ? new Date(sale.saleDate) : new Date()
+        }));
         
-        console.log('Setting demo client data');
-        setClient(demoClient);
-        setItems(demoItems);
-        setSales(demoSales);
-        setLoading(false);
-        return;
-      }
-      
-      console.log('Attempting Airtable connection for:', id);
-      
-      // Real Airtable data
-      const [clientData, itemsData, salesData] = await Promise.all([
-        AirtableService.getClient(id),
-        AirtableService.getItemsByClient(id),
-        AirtableService.getSalesByClient(id)
-      ]);
-
-      if (clientData) {
         setClient(clientData);
         setItems(itemsData);
         setSales(salesData);
       } else {
-        // Fallback to demo data if Airtable client not found
-        console.log('Client not found in Airtable, using demo data');
-        const fallbackClient: Client = {
-          id: id,
-          firstName: 'Demo',
-          lastName: 'Client',
-          email: 'demo@kpcvault.com',
-          phone: '(555) 123-4567',
-          address: {
-            street: '123 Demo Street',
-            city: 'San Francisco',
-            state: 'CA',
-            zipCode: '94105'
-          },
-          items: [],
-          totalEarnings: 8750
-        };
-        
-        const fallbackItems: Item[] = [
-          {
-            id: 'demo-item-1',
-            title: 'Luxury Watch',
-            description: 'High-end timepiece in excellent condition',
-            estimatedValue: 5000,
-            category: 'Jewelry',
-            isSpecialty: true,
-            photos: [],
-            status: 'active',
-            consignedDate: new Date('2024-04-01'),
-          }
-        ];
-        
-        setClient(fallbackClient);
-        setItems(fallbackItems);
-        setSales([]);
+        // API returned an error
+        console.error('Portal API error:', res.status);
       }
     } catch (error) {
       console.error('Error loading client data:', error);
-      // Even if there's an error, provide demo data
-      const errorFallbackClient: Client = {
-        id: id,
-        firstName: 'Demo',
-        lastName: 'User',
-        email: 'demo@kpcvault.com',
-        phone: '(555) 123-4567',
-        address: {
-          street: '123 Demo Street',
-          city: 'San Francisco',
-          state: 'CA',
-          zipCode: '94105'
-        },
-        items: [],
-        totalEarnings: 0
-      };
-      setClient(errorFallbackClient);
-      setItems([]);
-      setSales([]);
     } finally {
       setLoading(false);
     }
@@ -271,39 +104,11 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
   }
 
   if (!client) {
-    // Force create demo client if none exists
-    const forceDemo = () => {
-      const demoClient: Client = {
-        id: clientId || 'demo',
-        firstName: 'Demo',
-        lastName: 'Client', 
-        email: 'demo@kpcvault.com',
-        phone: '(555) 123-4567',
-        address: {
-          street: '123 Demo Street',
-          city: 'San Francisco', 
-          state: 'CA',
-          zipCode: '94105'
-        },
-        items: [],
-        totalEarnings: 5000
-      };
-      setClient(demoClient);
-      setItems([]);
-      setSales([]);
-    };
-    
     return (
       <div className="text-center py-16">
-        <Package className="mx-auto h-16 w-16 text-blue-600 mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Loading Demo Data</h3>
-        <button 
-          onClick={forceDemo}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Continue with Demo
-        </button>
-        <p className="text-gray-500 text-sm mt-4">Click to see the portal with sample data</p>
+        <Package className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Client Not Found</h3>
+        <p className="text-gray-500">Please check your client ID and try again.</p>
       </div>
     );
   }
