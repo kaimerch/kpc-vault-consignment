@@ -1,0 +1,21 @@
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Vault Icon -->
+  <rect x="8" y="12" width="24" height="36" rx="4" fill="#1e3a8a" stroke="#d4af37" stroke-width="2"/>
+  <rect x="12" y="16" width="16" height="28" rx="2" fill="#f8f9fa"/>
+  <circle cx="20" cy="30" r="6" fill="#1e3a8a"/>
+  <circle cx="20" cy="30" r="3" fill="#d4af37"/>
+  <rect x="18" y="28" width="4" height="4" fill="#1e3a8a"/>
+  
+  <!-- Company Name -->
+  <text x="45" y="25" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e3a8a">
+    KPC
+  </text>
+  <text x="45" y="42" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#d4af37">
+    VAULT
+  </text>
+  
+  <!-- Tagline -->
+  <text x="120" y="35" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">
+    CONSIGNMENT SERVICES
+  </text>
+</svg>
