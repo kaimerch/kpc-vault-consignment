@@ -28,6 +28,107 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
     try {
       setLoading(true);
       
+      // Demo data for testing
+      if (id === 'demo-client-123' || id.toLowerCase().includes('demo')) {
+        const demoClient: Client = {
+          id: 'demo-client-123',
+          firstName: 'John',
+          lastName: 'Smith',
+          email: 'john.smith@email.com',
+          phone: '(555) 123-4567',
+          address: {
+            street: '123 Main Street',
+            city: 'San Francisco',
+            state: 'CA',
+            zipCode: '94105'
+          },
+          items: [],
+          totalEarnings: 12500
+        };
+        
+        const demoItems: Item[] = [
+          {
+            id: 'item-1',
+            title: 'Vintage Rolex Submariner',
+            description: 'Authentic 1970s Rolex Submariner in excellent condition with original box and papers.',
+            estimatedValue: 8500,
+            category: 'Watches',
+            isSpecialty: true,
+            photos: ['rolex1.jpg', 'rolex2.jpg'],
+            status: 'sold',
+            consignedDate: new Date('2024-01-15'),
+            soldDate: new Date('2024-02-20'),
+            soldPrice: 9200,
+            commission: 2300
+          },
+          {
+            id: 'item-2',
+            title: 'Mid-Century Modern Dining Set',
+            description: 'Beautiful walnut dining table with 6 matching chairs, designed in the 1960s.',
+            estimatedValue: 2800,
+            category: 'Furniture',
+            isSpecialty: false,
+            photos: ['dining1.jpg'],
+            status: 'active',
+            consignedDate: new Date('2024-03-10'),
+          },
+          {
+            id: 'item-3',
+            title: 'Original Oil Painting',
+            description: 'Signed abstract expressionist painting by local artist, circa 1980s.',
+            estimatedValue: 1200,
+            category: 'Art',
+            isSpecialty: true,
+            photos: ['painting1.jpg', 'painting2.jpg', 'painting3.jpg'],
+            status: 'sold',
+            consignedDate: new Date('2024-02-05'),
+            soldDate: new Date('2024-03-15'),
+            soldPrice: 1400,
+            commission: 420
+          },
+          {
+            id: 'item-4',
+            title: 'Designer Handbag Collection',
+            description: 'Set of 3 authentic luxury handbags: Chanel, Louis Vuitton, and Hermès.',
+            estimatedValue: 4500,
+            category: 'Fashion',
+            isSpecialty: true,
+            photos: ['bags1.jpg'],
+            status: 'pending',
+            consignedDate: new Date('2024-04-01'),
+          }
+        ];
+        
+        const demoSales: Sale[] = [
+          {
+            id: 'sale-1',
+            itemId: 'item-1',
+            clientId: 'demo-client-123',
+            salePrice: 9200,
+            commission: 2300,
+            clientPayout: 6900,
+            saleDate: new Date('2024-02-20'),
+            paymentStatus: 'paid'
+          },
+          {
+            id: 'sale-2',
+            itemId: 'item-3',
+            clientId: 'demo-client-123',
+            salePrice: 1400,
+            commission: 420,
+            clientPayout: 980,
+            saleDate: new Date('2024-03-15'),
+            paymentStatus: 'paid'
+          }
+        ];
+        
+        setClient(demoClient);
+        setItems(demoItems);
+        setSales(demoSales);
+        return;
+      }
+      
+      // Real Airtable data
       const [clientData, itemsData, salesData] = await Promise.all([
         AirtableService.getClient(id),
         AirtableService.getItemsByClient(id),

@@ -88,9 +88,12 @@ export default function PortalPage() {
                   <Star className="text-yellow-600" size={14} />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-gray-700 mb-1">Demo Access</p>
-                  <p className="text-xs text-gray-600">
-                    Use any client ID from Airtable or "demo-client-123" for testing
+                  <p className="text-xs font-medium text-gray-700 mb-1">Try the Demo</p>
+                  <p className="text-xs text-gray-600 mb-2">
+                    Use <strong>demo-client-123</strong> to see the portal with sample data
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Includes: luxury items, sales history, and client dashboard
                   </p>
                 </div>
               </div>
