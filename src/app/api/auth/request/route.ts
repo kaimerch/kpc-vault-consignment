@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     // Send magic link email
     try {
       await resend.emails.send({
-        from: 'KPC Vault <noreply@kpcvault.com>',
+        from: process.env.RESEND_FROM_EMAIL || 'KPC Vault <onboarding@resend.dev>',
         to: [email],
         subject: 'Access Your KPC Vault Account',
         html: `
