@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // Send magic link email
     try {
-      await resend.emails.send({
+      const emailResult = await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL || 'KPC Vault <onboarding@resend.dev>',
         to: [email],
         subject: 'Access Your KPC Vault Account',
@@ -97,13 +97,15 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({ 
         success: true, 
-        message: `Magic link sent to ${email}. Check your inbox!` 
+        message: `Magic link sent to ${email}. Check your inbox!`,
+        debug: emailResult
       });
       
-    } catch (emailError) {
+    } catch (emailError: any) {
       console.error('Failed to send email:', emailError);
       return NextResponse.json({ 
-        error: 'Failed to send email. Please try again.' 
+        error: 'Failed to send email. Please try again.',
+        debug: emailError?.message || String(emailError)
       }, { status: 500 });
     }
 
