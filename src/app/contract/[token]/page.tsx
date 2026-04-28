@@ -10,13 +10,22 @@ function useToken() {
   const [token, setToken] = useState<string | null>(null);
   
   useEffect(() => {
-    if (params) {
+    if (params && params.token) {
       // Handle both sync and async params
       if (typeof params.token === 'string') {
         setToken(params.token);
-      } else if (params.token) {
+      } else if (Array.isArray(params.token)) {
+        // Handle array case (shouldn't happen for [token] route but TypeScript requires it)
+        setToken(params.token[0] || null);
+      } else {
         // Handle Promise-based params in newer Next.js
-        Promise.resolve(params.token).then(setToken);
+        Promise.resolve(params.token).then((resolvedToken) => {
+          if (typeof resolvedToken === 'string') {
+            setToken(resolvedToken);
+          } else if (Array.isArray(resolvedToken)) {
+            setToken(resolvedToken[0] || null);
+          }
+        });
       }
     }
   }, [params]);
@@ -220,7 +229,8 @@ export default function ContractPage() {
       
     } catch (error) {
       console.error('Signing error:', error);
-      alert(`Failed to sign contract: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Failed to sign contract: ${errorMessage}`);
     } finally {
       setSigning(false);
     }
