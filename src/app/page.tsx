@@ -11,7 +11,7 @@ export default function Home() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <a href="https://kpcvault.org" target="_blank" rel="noopener noreferrer" className="flex items-center hover:opacity-80 transition-opacity">
-                <Image src="/kpc-vault-logo-original.jpg" alt="KPC Vault Logo" width={160} height={48} className="mr-4" />
+                <Image src="/kpc-vault-logo-white-bg.jpg" alt="KPC Vault Logo" width={160} height={48} className="mr-4 bg-white rounded-lg p-2 shadow-sm" />
                 <div className="hidden sm:block">
                   <p className="text-sm text-gray-600 font-medium">Premier Consignment Services</p>
                 </div>
