@@ -10,10 +10,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <Image src="/kpc-vault-logo.svg" alt="KPC Vault Logo" width={120} height={36} className="mr-4" />
-              <div className="hidden sm:block">
-                <p className="text-sm text-gray-600 font-medium">Premier Consignment Services</p>
-              </div>
+              <a href="https://kpcvault.org" target="_blank" rel="noopener noreferrer" className="flex items-center hover:opacity-80 transition-opacity">
+                <Image src="/kpc-vault-logo.svg" alt="KPC Vault Logo" width={120} height={36} className="mr-4" />
+                <div className="hidden sm:block">
+                  <p className="text-sm text-gray-600 font-medium">Premier Consignment Services</p>
+                </div>
+              </a>
             </div>
             <nav className="hidden md:flex space-x-8">
               <a href="#calculator" className="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Calculator</a>
@@ -185,7 +187,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
-              <Image src="/kpc-vault-logo.svg" alt="KPC Vault Logo" width={120} height={36} className="mb-4 brightness-0 invert" />
+              <a href="https://kpcvault.org" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
+                <Image src="/kpc-vault-logo.svg" alt="KPC Vault Logo" width={120} height={36} className="mb-4 brightness-0 invert" />
+              </a>
               <p className="text-gray-400">Professional consignment services for luxury and collectible items.</p>
             </div>
             <div>
