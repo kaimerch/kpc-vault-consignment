@@ -11,7 +11,7 @@ export default function Home() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <a href="https://kpcvault.org" target="_blank" rel="noopener noreferrer" className="flex items-center hover:opacity-80 transition-opacity">
-                <Image src="/kpc-vault-logo.svg" alt="KPC Vault Logo" width={160} height={48} className="mr-4" />
+                <Image src="/kpc-vault-logo-original.jpg" alt="KPC Vault Logo" width={160} height={48} className="mr-4" />
                 <div className="hidden sm:block">
                   <p className="text-sm text-gray-600 font-medium">Premier Consignment Services</p>
                 </div>
@@ -188,7 +188,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <a href="https://kpcvault.org" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
-                <Image src="/kpc-vault-logo.svg" alt="KPC Vault Logo" width={140} height={42} className="mb-4 brightness-0 invert" />
+                <Image src="/kpc-vault-logo-original.jpg" alt="KPC Vault Logo" width={140} height={42} className="mb-4" />
               </a>
               <p className="text-gray-400">Professional consignment services for luxury and collectible items.</p>
             </div>
