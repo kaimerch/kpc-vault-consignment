@@ -1,5 +1,5 @@
 import CommissionCalculator from '@/components/CommissionCalculator';
-import { Shield, Users, TrendingUp, FileText, Star, CheckCircle } from 'lucide-react';
+import { Shield, Users, TrendingUp, FileText, Star, CheckCircle, Tag, Wallet, Calendar } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Home() {
@@ -50,21 +50,41 @@ export default function Home() {
               </div>
             </div>
             <div className="hidden lg:block">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-                <div className="grid grid-cols-2 gap-6 text-center">
-                  <div>
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-blue-500/20 rounded-full p-3 border border-blue-400/30">
+                        <Tag className="text-yellow-400" size={24} />
+                      </div>
+                    </div>
                     <div className="text-3xl font-bold text-yellow-400">2.7K+</div>
                     <div className="text-sm text-blue-200">Items Sold</div>
                   </div>
-                  <div>
-                    <div className="text-3xl font-bold text-yellow-400">Client-Focused</div>
-                    <div className="text-sm text-blue-200">Personalized Service</div>
+                  <div className="text-center">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-blue-500/20 rounded-full p-3 border border-blue-400/30">
+                        <Shield className="text-yellow-400" size={24} />
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-yellow-400">Zero</div>
+                    <div className="text-sm text-blue-200">Upfront Fees</div>
                   </div>
-                  <div>
-                    <div className="text-3xl font-bold text-yellow-400">Zero Upfront</div>
-                    <div className="text-sm text-blue-200">No Hidden Fees</div>
+                  <div className="text-center">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-blue-500/20 rounded-full p-3 border border-blue-400/30">
+                        <Wallet className="text-yellow-400" size={24} />
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-yellow-400">Transparent</div>
+                    <div className="text-sm text-blue-200">Payouts</div>
                   </div>
-                  <div>
+                  <div className="text-center">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-blue-500/20 rounded-full p-3 border border-blue-400/30">
+                        <Calendar className="text-yellow-400" size={24} />
+                      </div>
+                    </div>
                     <div className="text-3xl font-bold text-yellow-400">30</div>
                     <div className="text-sm text-blue-200">Day Avg. Sale</div>
                   </div>
