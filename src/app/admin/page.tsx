@@ -35,6 +35,7 @@ export default function AdminDashboard() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState<string>('');
+  const [updatingItem, setUpdatingItem] = useState<string>('');
 
   useEffect(() => {
     loadData();
@@ -147,6 +148,36 @@ export default function AdminDashboard() {
     }
   };
 
+  const STATUS_OPTIONS = [
+    { value: 'pending', label: '🕐 Pending', color: 'bg-gray-100 text-gray-700' },
+    { value: 'listed', label: '📋 Listed', color: 'bg-blue-100 text-blue-700' },
+    { value: 'sold', label: '✅ Sold', color: 'bg-green-100 text-green-700' },
+    { value: 'returned', label: '↩️ Returned', color: 'bg-red-100 text-red-700' },
+  ];
+
+  const updateItemStatus = async (itemId: string, newStatus: string) => {
+    setUpdatingItem(itemId);
+    try {
+      const response = await fetch('/api/admin/items', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId, status: newStatus })
+      });
+      if (!response.ok) throw new Error('Update failed');
+      // Update local state immediately
+      setItems(prev => prev.map(item =>
+        item.id === itemId
+          ? { ...item, fields: { ...item.fields, 'Status': newStatus } }
+          : item
+      ));
+    } catch (error) {
+      alert('Failed to update status. Please try again.');
+      console.error(error);
+    } finally {
+      setUpdatingItem('');
+    }
+  };
+
   const getClientItems = (clientId: string) => {
     return items.filter(item => 
       item.fields.Client && item.fields.Client.includes(clientId)
@@ -252,7 +283,21 @@ export default function AdminDashboard() {
                                 const photos = item.fields['Photos'] || [];
                                 return (
                                   <div key={item.id} className="border border-gray-200 rounded-lg p-2">
-                                    <div className="font-medium text-gray-800 text-xs mb-1">{item.fields['Title']}</div>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="font-medium text-gray-800 text-xs">{item.fields['Title']}</div>
+                                      <select
+                                        value={item.fields['Status'] || 'pending'}
+                                        onChange={(e) => updateItemStatus(item.id, e.target.value)}
+                                        disabled={updatingItem === item.id}
+                                        className={`text-xs px-2 py-0.5 rounded border-0 font-medium cursor-pointer disabled:opacity-50 ${
+                                          STATUS_OPTIONS.find(s => s.value === (item.fields['Status'] || 'pending'))?.color || 'bg-gray-100 text-gray-700'
+                                        }`}
+                                      >
+                                        {STATUS_OPTIONS.map(s => (
+                                          <option key={s.value} value={s.value}>{s.label}</option>
+                                        ))}
+                                      </select>
+                                    </div>
                                     {photos.length > 0 ? (
                                       <div className="flex flex-wrap gap-1">
                                         {photos.map((photo, pi) => (
