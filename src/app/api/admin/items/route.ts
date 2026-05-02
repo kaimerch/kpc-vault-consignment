@@ -27,7 +27,8 @@ export async function PATCH(request: NextRequest) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        fields: { 'Status': status }
+        fields: { 'Status': status },
+        typecast: true
       })
     });
 
