@@ -18,9 +18,9 @@ export default function Home() {
               </a>
             </div>
             <nav className="flex space-x-6">
-              <a href="#calculator" className="text-white hover:text-yellow-400 font-bold text-lg transition-colors">Calculator</a>
-              <a href="/consign" className="text-white hover:text-yellow-400 font-bold text-lg transition-colors">Consign Items</a>
-              <a href="/portal" className="text-white hover:text-yellow-400 font-bold text-lg transition-colors">Client Portal</a>
+              <a href="#calculator" style={{color: 'white', fontWeight: 'bold', fontSize: '1.125rem'}} className="hover:text-yellow-400 transition-colors">Calculator</a>
+              <a href="/consign" style={{color: 'white', fontWeight: 'bold', fontSize: '1.125rem'}} className="hover:text-yellow-400 transition-colors">Consign Items</a>
+              <a href="/portal" style={{color: 'white', fontWeight: 'bold', fontSize: '1.125rem'}} className="hover:text-yellow-400 transition-colors">Client Portal</a>
             </nav>
           </div>
         </div>
