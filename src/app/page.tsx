@@ -11,13 +11,13 @@ export default function Home() {
           <div className="flex justify-between items-center py-5">
             <div className="flex items-center">
               <a href="https://kpcvault.org" target="_blank" rel="noopener noreferrer" className="flex items-center hover:opacity-80 transition-opacity">
-                <Image src="/kpc-vault-logo-white-bg.jpg" alt="KPC Vault Logo" width={160} height={48} className="mr-4 bg-white rounded-lg p-2 shadow-sm" />
-                <div className="hidden sm:block">
+                <Image src="/kpc-vault-logo-white-bg.jpg" alt="KPC Vault Logo" width={120} height={36} className="mr-3 bg-white rounded-lg p-1 shadow-sm" />
+                <div>
                   <p className="text-base text-white font-bold tracking-wide">Premier Consignment Services</p>
                 </div>
               </a>
             </div>
-            <nav className="hidden md:flex space-x-8">
+            <nav className="flex space-x-6">
               <a href="#calculator" className="text-white hover:text-yellow-400 font-bold text-lg transition-colors">Calculator</a>
               <a href="/consign" className="text-white hover:text-yellow-400 font-bold text-lg transition-colors">Consign Items</a>
               <a href="/portal" className="text-white hover:text-yellow-400 font-bold text-lg transition-colors">Client Portal</a>
