@@ -25,6 +25,8 @@ interface Item {
     'Description': string;
     'Status': string;
     'Client': string[];
+    'Photos'?: Array<{ url: string; filename?: string; thumbnails?: { small?: { url: string }; large?: { url: string } } }>;
+    'Estimated Value'?: number;
   };
 }
 
@@ -245,8 +247,30 @@ export default function AdminDashboard() {
                         <div className="text-sm">
                           {clientItems.length} item(s)
                           {clientItems.length > 0 && (
-                            <div className="text-xs text-gray-500 mt-1">
-                              {clientItems.map(item => item.fields['Title']).join(', ')}
+                            <div className="mt-2 space-y-2">
+                              {clientItems.map(item => {
+                                const photos = item.fields['Photos'] || [];
+                                return (
+                                  <div key={item.id} className="border border-gray-200 rounded-lg p-2">
+                                    <div className="font-medium text-gray-800 text-xs mb-1">{item.fields['Title']}</div>
+                                    {photos.length > 0 ? (
+                                      <div className="flex flex-wrap gap-1">
+                                        {photos.map((photo, pi) => (
+                                          <a key={pi} href={photo.url} target="_blank" rel="noopener noreferrer">
+                                            <img
+                                              src={photo.thumbnails?.small?.url || photo.url}
+                                              alt={`Photo ${pi + 1}`}
+                                              className="w-16 h-16 object-cover rounded border border-gray-300 hover:opacity-80 transition-opacity"
+                                            />
+                                          </a>
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <span className="text-xs text-gray-400 italic">No photos</span>
+                                    )}
+                                  </div>
+                                );
+                              })}
                             </div>
                           )}
                         </div>

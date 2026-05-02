@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Upload, User, Package, FileText, Camera } from 'lucide-react';
 import CommissionCalculator from './CommissionCalculator';
 import { calculateCommission } from '@/lib/commission';
+import { uploadPhotos } from '@/lib/cloudinary';
 
 interface FormData {
   firstName: string;
@@ -56,6 +57,7 @@ export default function IntakeForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<string>('');
 
   const updateFormData = (path: string, value: any) => {
     setFormData(prev => {
@@ -125,6 +127,19 @@ export default function IntakeForm() {
     setIsSubmitting(true);
 
     try {
+      // Upload all photos to Cloudinary first
+      const itemsWithPhotoUrls = await Promise.all(
+        formData.items.map(async (item, idx) => {
+          if (item.photos.length === 0) return { ...item, photoUrls: [] };
+          setUploadStatus(`Uploading photos for item ${idx + 1} of ${formData.items.length}...`);
+          const photoUrls = await uploadPhotos(item.photos, (done, total) => {
+            setUploadStatus(`Uploading item ${idx + 1} photos: ${done}/${total}`);
+          });
+          return { ...item, photoUrls };
+        })
+      );
+
+      setUploadStatus('Saving application...');
       console.log('🚀 Submitting application via secure API...');
 
       const response = await fetch('/api/submit', {
@@ -132,7 +147,7 @@ export default function IntakeForm() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, items: itemsWithPhotoUrls })
       });
 
       if (!response.ok) {
@@ -559,7 +574,7 @@ export default function IntakeForm() {
                   disabled={isSubmitting}
                   className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 text-lg font-bold"
                 >
-                  {isSubmitting ? 'Submitting...' : '✅ Submit Application'}
+                  {isSubmitting ? (uploadStatus || 'Uploading...') : '✅ Submit Application'}
                 </button>
               </div>
             </div>

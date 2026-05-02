@@ -65,6 +65,24 @@ export async function POST(request: NextRequest) {
       }
       const commission = estimatedValue * commissionRate;
 
+      // Build photo attachments for Airtable
+      const photoAttachments = (item.photoUrls || []).map((url: string) => ({ url }));
+
+      const itemFields: Record<string, unknown> = {
+        'Title': item.title,
+        'Description': item.description,
+        'Estimated Value': estimatedValue,
+        'Commission': commission,
+        'Is Specialty': item.isSpecialty || false,
+        'Status': 'pending',
+        'Consigned Date': new Date().toISOString().split('T')[0],
+        'Client': [clientId]
+      };
+
+      if (photoAttachments.length > 0) {
+        itemFields['Photos'] = photoAttachments;
+      }
+
       const itemResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Items`, {
         method: 'POST',
         headers: {
@@ -72,16 +90,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          fields: {
-            'Title': item.title,
-            'Description': item.description,
-            'Estimated Value': estimatedValue,
-            'Commission': commission,
-            'Is Specialty': item.isSpecialty || false,
-            'Status': 'pending',
-            'Consigned Date': new Date().toISOString().split('T')[0],
-            'Client': [clientId]
-          },
+          fields: itemFields,
           typecast: true
         })
       });
