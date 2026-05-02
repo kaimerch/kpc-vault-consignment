@@ -27,6 +27,10 @@ interface Item {
     'Client': string[];
     'Photos'?: Array<{ url: string; filename?: string; thumbnails?: { small?: { url: string }; large?: { url: string } } }>;
     'Estimated Value'?: number;
+    'Is Specialty'?: boolean;
+    'Sold Price'?: number;
+    'Commission'?: number;
+    'Client Payout'?: number;
   };
 }
 
@@ -36,6 +40,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState<string>('');
   const [updatingItem, setUpdatingItem] = useState<string>('');
+  const [soldPriceInputs, setSoldPriceInputs] = useState<Record<string, string>>({});
 
   useEffect(() => {
     loadData();
@@ -164,7 +169,6 @@ export default function AdminDashboard() {
         body: JSON.stringify({ itemId, status: newStatus })
       });
       if (!response.ok) throw new Error('Update failed');
-      // Update local state immediately
       setItems(prev => prev.map(item =>
         item.id === itemId
           ? { ...item, fields: { ...item.fields, 'Status': newStatus } }
@@ -172,6 +176,45 @@ export default function AdminDashboard() {
       ));
     } catch (error) {
       alert('Failed to update status. Please try again.');
+      console.error(error);
+    } finally {
+      setUpdatingItem('');
+    }
+  };
+
+  const saveSoldPrice = async (item: Item) => {
+    const raw = soldPriceInputs[item.id];
+    const soldPrice = parseFloat(raw);
+    if (isNaN(soldPrice) || soldPrice <= 0) {
+      alert('Enter a valid sale price.');
+      return;
+    }
+    setUpdatingItem(item.id);
+    try {
+      const response = await fetch('/api/admin/items', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId: item.id,
+          soldPrice,
+          isSpecialty: item.fields['Is Specialty'] ?? false
+        })
+      });
+      if (!response.ok) throw new Error('Update failed');
+      const isSpecialty = item.fields['Is Specialty'] ?? false;
+      let rate = 0.33;
+      if (isSpecialty) rate = 0.35;
+      else if (soldPrice >= 500) rate = 0.25;
+      else if (soldPrice < 100) rate = 0.40;
+      const commission = soldPrice * rate;
+      const clientPayout = soldPrice - commission;
+      setItems(prev => prev.map(i =>
+        i.id === item.id
+          ? { ...i, fields: { ...i.fields, 'Sold Price': soldPrice, 'Commission': commission, 'Client Payout': clientPayout } }
+          : i
+      ));
+    } catch (error) {
+      alert('Failed to save sold price. Please try again.');
       console.error(error);
     } finally {
       setUpdatingItem('');
@@ -298,8 +341,79 @@ export default function AdminDashboard() {
                                         ))}
                                       </select>
                                     </div>
+
+                                    {/* Sold price input */}
+                                    {item.fields['Status'] === 'sold' && (
+                                      <div className="mt-2 bg-green-50 border border-green-200 rounded p-2">
+                                        {item.fields['Sold Price'] ? (
+                                          <div className="text-xs space-y-0.5">
+                                            <div className="flex justify-between">
+                                              <span className="text-gray-600">Sold for</span>
+                                              <span className="font-bold text-gray-900">${item.fields['Sold Price'].toFixed(2)}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span className="text-gray-600">Commission</span>
+                                              <span className="text-red-600">-${item.fields['Commission']?.toFixed(2)}</span>
+                                            </div>
+                                            <div className="flex justify-between border-t border-green-200 pt-0.5 mt-0.5">
+                                              <span className="font-bold text-gray-700">Client Payout</span>
+                                              <span className="font-bold text-green-700">${item.fields['Client Payout']?.toFixed(2)}</span>
+                                            </div>
+                                            <button
+                                              onClick={() => setSoldPriceInputs(p => ({ ...p, [item.id]: '' }))}
+                                              className="text-xs text-blue-500 hover:underline mt-1"
+                                            >Edit price</button>
+                                          </div>
+                                        ) : (
+                                          <div>
+                                            <div className="text-xs font-medium text-gray-700 mb-1">Enter sale price:</div>
+                                            <div className="flex gap-1">
+                                              <input
+                                                type="number"
+                                                min="0"
+                                                step="0.01"
+                                                placeholder="0.00"
+                                                value={soldPriceInputs[item.id] ?? ''}
+                                                onChange={(e) => setSoldPriceInputs(p => ({ ...p, [item.id]: e.target.value }))}
+                                                className="flex-1 text-xs px-2 py-1 border border-gray-300 rounded w-0"
+                                              />
+                                              <button
+                                                onClick={() => saveSoldPrice(item)}
+                                                disabled={updatingItem === item.id}
+                                                className="text-xs bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                                              >
+                                                {updatingItem === item.id ? '...' : 'Save'}
+                                              </button>
+                                            </div>
+                                            {soldPriceInputs[item.id] && !isNaN(parseFloat(soldPriceInputs[item.id])) && (() => {
+                                              const sp = parseFloat(soldPriceInputs[item.id]);
+                                              const isSpec = item.fields['Is Specialty'] ?? false;
+                                              let rate = 0.33;
+                                              if (isSpec) rate = 0.35;
+                                              else if (sp >= 500) rate = 0.25;
+                                              else if (sp < 100) rate = 0.40;
+                                              const comm = sp * rate;
+                                              const payout = sp - comm;
+                                              return (
+                                                <div className="mt-1 text-xs text-gray-600 space-y-0.5">
+                                                  <div className="flex justify-between">
+                                                    <span>Commission ({(rate*100).toFixed(0)}%)</span>
+                                                    <span className="text-red-500">-${comm.toFixed(2)}</span>
+                                                  </div>
+                                                  <div className="flex justify-between font-bold">
+                                                    <span>Client Payout</span>
+                                                    <span className="text-green-600">${payout.toFixed(2)}</span>
+                                                  </div>
+                                                </div>
+                                              );
+                                            })()}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+
                                     {photos.length > 0 ? (
-                                      <div className="flex flex-wrap gap-1">
+                                      <div className="flex flex-wrap gap-1 mt-2">
                                         {photos.map((photo, pi) => (
                                           <a key={pi} href={photo.url} target="_blank" rel="noopener noreferrer">
                                             <img
