@@ -205,9 +205,9 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
         <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Sales</p>
-              <p className="text-2xl font-bold text-yellow-600">{formatCurrency(stats.totalSales)}</p>
-              <p className="text-xs text-gray-500 mt-1">Gross revenue</p>
+              <p className="text-sm font-medium text-gray-600">Your Revenue</p>
+              <p className="text-2xl font-bold text-yellow-600">{formatCurrency(stats.totalEarnings)}</p>
+              <p className="text-xs text-gray-500 mt-1">After commission</p>
             </div>
             <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full p-3">
               <Calendar className="text-yellow-700" size={24} />
