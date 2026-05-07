@@ -74,7 +74,8 @@ export async function GET(request: NextRequest) {
         consignedDate: record.fields['Consigned Date'] || null,
         soldDate: record.fields['Sold Date'] || null,
         soldPrice: (record.fields['Sold Price'] as number) || undefined,
-        commission: (record.fields['Commission'] as number) || undefined
+        commission: (record.fields['Commission'] as number) || undefined,
+        clientPayout: (record.fields['Client Payout'] as number) || undefined
       }));
     } catch (e) {
       console.error('Error fetching items:', e);

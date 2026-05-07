@@ -23,6 +23,7 @@ export interface Item {
   soldDate?: Date;
   soldPrice?: number;
   commission?: number;
+  clientPayout?: number;
 }
 
 export interface Client {

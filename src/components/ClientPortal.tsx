@@ -86,7 +86,7 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
     const totalValue = items.reduce((sum, item) => sum + item.estimatedValue, 0);
     const soldItems = items.filter(item => item.status === 'sold');
     const totalSales = soldItems.reduce((sum, item) => sum + (item.soldPrice || 0), 0);
-    const totalEarnings = sales.reduce((sum, sale) => sum + sale.clientPayout, 0);
+    const totalEarnings = soldItems.reduce((sum, item) => sum + (item.clientPayout || 0), 0);
 
     return {
       totalItems: items.length,
@@ -306,9 +306,21 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
                     {item.status === 'sold' && item.soldPrice && (
                       <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
                         <div className="flex justify-between items-center">
-                          <span className="text-green-700 font-medium">Sold!</span>
+                          <span className="text-green-700 font-medium text-sm">Sold for</span>
                           <span className="text-green-600 font-semibold">{formatCurrency(item.soldPrice)}</span>
                         </div>
+                        {item.commission !== undefined && (
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-gray-500 text-sm">Commission</span>
+                            <span className="text-gray-500 text-sm">-{formatCurrency(item.commission)}</span>
+                          </div>
+                        )}
+                        {item.clientPayout !== undefined && (
+                          <div className="flex justify-between items-center mt-1 border-t border-green-200 pt-1">
+                            <span className="text-green-800 font-semibold text-sm">Your Payout</span>
+                            <span className="text-green-700 font-bold">{formatCurrency(item.clientPayout)}</span>
+                          </div>
+                        )}
                         <div className="text-xs text-green-600 mt-1">
                           {item.soldDate && `Sold on ${item.soldDate.toLocaleDateString()}`}
                         </div>
