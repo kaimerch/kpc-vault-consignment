@@ -110,7 +110,35 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching sales:', e);
     }
 
-    return NextResponse.json({ client, items, sales });
+    // Fetch notifications for this client
+    let notifications: any[] = [];
+    try {
+      const notifRecords = await base('Notifications')
+        .select({
+          sort: [{ field: 'Created', direction: 'desc' }],
+          maxRecords: 20
+        })
+        .all();
+
+      const clientNotifs = notifRecords.filter((record: any) => {
+        const clientLinks = record.fields['Client'] as string[] | undefined;
+        return clientLinks && clientLinks.includes(clientId);
+      });
+
+      notifications = clientNotifs.map((record: any) => ({
+        id: record.id,
+        title: (record.fields['Title'] as string) || '',
+        message: (record.fields['Message'] as string) || '',
+        eventType: (record.fields['Event Type'] as string) || '',
+        read: (record.fields['Read'] as boolean) || false,
+        createdAt: record.fields['Created'] || null
+      }));
+    } catch (e) {
+      // Notifications table may not exist yet
+      console.warn('Could not fetch notifications:', e);
+    }
+
+    return NextResponse.json({ client, items, sales, notifications });
   } catch (error) {
     console.error('Portal API error:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });

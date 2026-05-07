@@ -14,6 +14,8 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
   const [items, setItems] = useState<Item[]>([]);
   const [sales, setSales] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showAlerts, setShowAlerts] = useState(false);
   const [activeTab, setActiveTab] = useState<'items' | 'sales' | 'profile'>('items');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -52,10 +54,16 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
           ...sale,
           saleDate: sale.saleDate ? new Date(sale.saleDate) : new Date()
         }));
-        
+
+        const notifData = (data.notifications || []).map((n: any) => ({
+          ...n,
+          createdAt: n.createdAt ? new Date(n.createdAt) : new Date()
+        }));
+
         setClient(clientData);
         setItems(itemsData);
         setSales(salesData);
+        setNotifications(notifData);
       } else {
         // API returned an error
         console.error('Portal API error:', res.status);
@@ -146,14 +154,74 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
             </div>
             <div className="text-sm text-gray-600 mb-2">Total Earnings</div>
             <div className="flex space-x-2 justify-center lg:justify-end">
-              <button className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors flex items-center">
+              <button
+                onClick={() => setShowAlerts(!showAlerts)}
+                className="relative bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors flex items-center">
                 <Bell size={12} className="mr-1" />
                 Alerts
+                {notifications.filter(n => !n.read).length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                    {notifications.filter(n => !n.read).length}
+                  </span>
+                )}
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Alerts Panel */}
+      {showAlerts && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold flex items-center">
+              <Bell size={18} className="mr-2 text-blue-600" />
+              Notifications
+            </h3>
+            <button onClick={() => setShowAlerts(false)} className="text-gray-400 hover:text-gray-600 text-sm">Close</button>
+          </div>
+
+          {notifications.length === 0 ? (
+            <p className="text-gray-500 text-sm text-center py-4">No notifications yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {notifications.map((n) => (
+                <div
+                  key={n.id}
+                  className={`p-4 rounded-lg border ${
+                    n.read ? 'bg-gray-50 border-gray-200' : 'bg-blue-50 border-blue-200'
+                  }`}
+                  onClick={async () => {
+                    if (!n.read) {
+                      await fetch('/api/notifications/read', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ notificationId: n.id })
+                      });
+                      setNotifications(prev =>
+                        prev.map(notif => notif.id === n.id ? { ...notif, read: true } : notif)
+                      );
+                    }
+                  }}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className={`font-medium text-sm ${n.read ? 'text-gray-700' : 'text-blue-800'}`}>{n.title}</p>
+                      <p className="text-gray-600 text-sm mt-1">{n.message}</p>
+                    </div>
+                    <div className="text-right ml-4">
+                      <p className="text-xs text-gray-400">{n.createdAt?.toLocaleDateString()}</p>
+                      {!n.read && (
+                        <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full mt-1 inline-block">New</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
