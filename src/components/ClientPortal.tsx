@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Package, TrendingUp, DollarSign, Calendar, Search, Download, Eye, Bell, Star } from 'lucide-react';
+import { User, Package, TrendingUp, DollarSign, Calendar, Search, Eye, Bell, Star } from 'lucide-react';
 import { Client, Item, Sale } from '@/types';
 import { formatCurrency } from '@/lib/commission';
 
@@ -146,10 +146,6 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
             </div>
             <div className="text-sm text-gray-600 mb-2">Total Earnings</div>
             <div className="flex space-x-2 justify-center lg:justify-end">
-              <button className="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-700 transition-colors flex items-center">
-                <Download size={12} className="mr-1" />
-                Export
-              </button>
               <button className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors flex items-center">
                 <Bell size={12} className="mr-1" />
                 Alerts
