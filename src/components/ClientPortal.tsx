@@ -360,41 +360,34 @@ export default function ClientPortal({ clientId }: ClientPortalProps) {
           {activeTab === 'sales' && (
             <div>
               <h3 className="text-lg font-semibold mb-4">Sales History</h3>
-              
+
               <div className="space-y-4">
-                {sales.map((sale) => {
-                  const item = items.find(i => i.id === sale.itemId);
-                  return (
-                    <div key={sale.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium text-gray-900">{item?.title || 'Unknown Item'}</h4>
-                          <p className="text-sm text-black">Sold on {sale.saleDate.toLocaleDateString()}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-lg font-semibold">{formatCurrency(sale.salePrice)}</div>
-                          <div className="text-sm text-black">
-                            Commission: {formatCurrency(sale.commission)}
-                          </div>
-                          <div className="text-green-600 font-medium">
-                            Your Payout: {formatCurrency(sale.clientPayout)}
-                          </div>
-                          <div className={`text-xs mt-1 ${
-                            sale.paymentStatus === 'paid' ? 'text-green-600' : 
-                            sale.paymentStatus === 'pending' ? 'text-yellow-600' : 'text-red-600'
-                          }`}>
-                            Payment: {sale.paymentStatus}
-                          </div>
-                        </div>
+                {items.filter(item => item.status === 'sold' && item.soldPrice).map((item) => (
+                  <div key={item.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-medium text-gray-900">{item.title}</h4>
+                        <p className="text-sm text-gray-500">
+                          {item.soldDate ? `Sold on ${item.soldDate.toLocaleDateString()}` : 'Sale date unavailable'}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm text-gray-500">Sold for {formatCurrency(item.soldPrice!)}</div>
+                        {item.commission !== undefined && (
+                          <div className="text-sm text-gray-500">Commission: -{formatCurrency(item.commission)}</div>
+                        )}
+                        {item.clientPayout !== undefined && (
+                          <div className="text-green-600 font-bold text-lg">Your Payout: {formatCurrency(item.clientPayout)}</div>
+                        )}
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
 
-                {sales.length === 0 && (
+                {items.filter(item => item.status === 'sold').length === 0 && (
                   <div className="text-center py-8">
-                    <DollarSign className="mx-auto h-12 w-12 text-gray-900 mb-4" />
-                    <p className="text-black">No sales yet.</p>
+                    <DollarSign className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-gray-500">No sales yet.</p>
                   </div>
                 )}
               </div>
